@@ -46,14 +46,14 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Company */}
+          {/* Ecosystem */}
           <div>
-            <h4 className="text-sm font-bold text-white mb-4">Company</h4>
+            <h4 className="text-sm font-bold text-white mb-4">Ecosystem</h4>
             <div className="space-y-2.5">
-              {["About Us", "Careers", "Blog", "Press"].map((item) => (
+              {["$AACCUMA Token", "Referral Program", "Staking Rewards", "Governance", "AAM.Foundation"].map((item) => (
                 <a
                   key={item}
-                  href="#"
+                  href={item === "$AACCUMA Token" ? "#token" : "#"}
                   className="block text-sm text-white/40 hover:text-white/70 transition-colors"
                 >
                   {item}
@@ -83,7 +83,7 @@ export function Footer() {
         <div className="border-t border-white/5 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
             <p className="text-xs text-white/25">
-              © 2025 WealthAAM. All rights reserved. WealthAAM is a product of QuantaamLabs.
+              © 2026 WealthAAM. All rights reserved. WealthAAM is a product of QuantaamLabs.
             </p>
             <div className="flex gap-6">
               {["Privacy Policy", "Terms of Service", "Cookie Policy", "Disclaimer"].map((item) => (

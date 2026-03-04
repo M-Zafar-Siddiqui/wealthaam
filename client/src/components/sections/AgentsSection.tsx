@@ -25,12 +25,12 @@ export function AgentsSection() {
           </div>
         </AnimatedSection>
 
-        {/* Agents Image */}
+        {/* Agents Network Visual from user */}
         <AnimatedSection delay={0.1}>
-          <div className="max-w-4xl mx-auto mb-16 rounded-2xl overflow-hidden">
+          <div className="max-w-3xl mx-auto mb-16 rounded-2xl overflow-hidden border border-white/10">
             <img
-              src={ASSETS.images.aiAgents}
-              alt="Multi-AI Agent System"
+              src={ASSETS.images.aiAgentsNetwork}
+              alt="Multi-AI Agent System Network"
               className="w-full h-auto"
             />
           </div>

@@ -6,23 +6,21 @@ export const ASSETS = {
     favicon: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/WealthAAMFavicon_f0b6d084.png",
   },
   images: {
-    heroBanner: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/hero-banner-Mn564REfziB7SymxitXnFj.webp",
-    blackSwan: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/black-swan-cUqsEBVxQngPEBgX9Lstcv.webp",
-    aiAgents: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/ai-agents-EgXvAjGhXFDWfG4jwwnTzi.webp",
-    architectureLayers: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/architecture-layers-VchXvNXgH9x273hhJWSxSv.webp",
-    wealthPathways: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/wealth-pathways-eV5x3UW5J2GNrJHdD4NbKS.webp",
+    pathwaysVisual: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/pathways-visual_e21d0964.png",
+    aiAgentsNetwork: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/ai-agents-network_98bbfc91.png",
+    architectureLayers: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/architecture-layers-visual_10597353.png",
   },
 } as const;
 
 export const NAV_LINKS = [
+  { label: "Philosophy", href: "#philosophy" },
   { label: "Features", href: "#features" },
   { label: "Black Swan", href: "#blackswan" },
   { label: "Architecture", href: "#architecture" },
   { label: "AI Agents", href: "#agents" },
-  { label: "Analytics", href: "#analytics" },
-  { label: "Performance", href: "#performance" },
   { label: "Pathways", href: "#pathways" },
-  { label: "Subscription", href: "#subscription" },
+  { label: "$AACCUMA", href: "#token" },
+  { label: "Pricing", href: "#subscription" },
 ] as const;
 
 export const FEATURES = [
@@ -292,29 +290,135 @@ export const SUBSCRIPTION_TIERS = [
   },
 ] as const;
 
-export const WEALTH_PATHWAYS = [
-  {
-    name: "Conservative Growth",
-    risk: "Low",
-    description: "Steady accumulation with minimal volatility exposure. Ideal for capital preservation with gradual asset growth.",
-    allocation: "70% Large Cap, 20% Stablecoins, 10% Mid Cap",
+export const WEALTH_PATHWAYS = {
+  "Systematic Wealth Building": {
+    description: "Automated strategies focused on consistent asset accumulation through systematic approaches.",
+    strategies: [
+      {
+        name: "Auto-Pilot Accumulator",
+        description: "Fully automated asset accumulation strategy that leverages volatility for systematic growth.",
+        features: ["Fully automated execution", "Multi-timeframe analysis", "Volatility-driven accumulation"],
+        metric: "329.34% average returns",
+      },
+      {
+        name: "SMART Accumulator",
+        description: "Strategic Market-Adaptive Real-Time accumulation strategy with intelligent adaptation.",
+        features: ["Adaptive to market conditions", "Real-time strategy adjustments", "Performance optimization"],
+        metric: "297.50% average returns",
+      },
+    ],
   },
-  {
-    name: "Balanced Accumulation",
-    risk: "Medium",
-    description: "Balanced approach combining stability with growth opportunities. Optimized for consistent accumulation.",
-    allocation: "50% Large Cap, 30% Mid Cap, 20% Emerging",
+  "Income Generation": {
+    description: "Strategies designed to generate consistent income streams while maintaining asset growth.",
+    strategies: [
+      {
+        name: "YieldFlow",
+        description: "Optimized yield farming strategy that maximizes income while minimizing impermanent loss.",
+        features: ["Automated yield optimization", "Impermanent loss mitigation", "Multi-protocol strategies"],
+        metric: "42.5% annual yield",
+      },
+      {
+        name: "DeFi Yield Harvester",
+        description: "Automated yield harvesting across multiple DeFi protocols with risk-adjusted allocation.",
+        features: ["Cross-protocol yield aggregation", "Risk-based rebalancing", "Auto-compound optimization"],
+        metric: "18-65% annual yield",
+      },
+    ],
   },
-  {
-    name: "Aggressive Growth",
-    risk: "High",
-    description: "Maximum accumulation potential through higher volatility assets. Designed for experienced investors.",
-    allocation: "30% Large Cap, 40% Mid Cap, 30% High Volatility",
+  "Goal-Based Investment": {
+    description: "Target-driven strategies that align your portfolio with specific financial milestones.",
+    strategies: [
+      {
+        name: "RetireForge",
+        description: "Retirement-focused accumulation strategy with long-term compounding optimization.",
+        features: ["Long-term compounding", "Risk-adjusted allocation", "Milestone tracking"],
+        metric: "Target: 10x in 10 years",
+      },
+      {
+        name: "MilestoneBuilder",
+        description: "Goal-specific investment strategy that tracks progress toward defined financial targets.",
+        features: ["Custom goal setting", "Progress tracking", "Dynamic rebalancing"],
+        metric: "Customizable targets",
+      },
+    ],
   },
-  {
-    name: "Multi-Asset Diversified",
-    risk: "Medium-High",
-    description: "Cross-asset accumulation spanning crypto, xStocks, and commodities for maximum diversification.",
-    allocation: "40% Crypto, 35% xStocks, 15% Gold, 10% Emerging",
+  "Risk-Managed Growth": {
+    description: "Growth-oriented strategies with built-in risk management and capital protection.",
+    strategies: [
+      {
+        name: "Risk-Guarded Growth",
+        description: "Growth strategy with integrated risk management using AQaR framework.",
+        features: ["AQaR-based risk limits", "Dynamic position sizing", "Drawdown protection"],
+        metric: "Max DD: 8.5%",
+      },
+      {
+        name: "SafeHaven",
+        description: "Capital preservation strategy that maintains growth while protecting against severe downturns.",
+        features: ["Capital preservation focus", "Hedging mechanisms", "Market crash protection"],
+        metric: "Max DD: 4.2%",
+      },
+    ],
   },
-] as const;
+  "Specialized Wealth": {
+    description: "Advanced strategies for specific asset classes and market opportunities.",
+    strategies: [
+      {
+        name: "Digital Treasury Pro",
+        description: "Institutional-grade digital asset treasury management with multi-asset diversification.",
+        features: ["Multi-asset allocation", "Institutional risk controls", "Regulatory compliance"],
+        metric: "Institutional grade",
+      },
+      {
+        name: "HedgeShield",
+        description: "Advanced hedging strategy using derivatives and multi-asset correlation for portfolio protection.",
+        features: ["Derivatives-based hedging", "Correlation analysis", "Portfolio insurance"],
+        metric: "Advanced protection",
+      },
+    ],
+  },
+} as const;
+
+export const AACCUMA_TOKEN = {
+  name: "$AACCUMA",
+  fullName: "AAM Ecosystem Token",
+  tagline: "The Fuel of the WealthAAM Ecosystem",
+  description: "The $AACCUMA token powers the entire WealthAAM ecosystem, rewarding active participants and enabling seamless access to premium features, governance, and referral benefits.",
+  utilities: [
+    {
+      title: "Subscription Discounts",
+      description: "Pay for WealthAAM subscriptions with $AACCUMA and receive up to 30% discount on all tiers.",
+      icon: "Percent",
+    },
+    {
+      title: "Staking Rewards",
+      description: "Stake $AACCUMA tokens to earn passive rewards and unlock higher-tier features without upgrading your plan.",
+      icon: "Coins",
+    },
+    {
+      title: "Governance Voting",
+      description: "Participate in platform governance — vote on new features, pathway additions, and ecosystem development priorities.",
+      icon: "Vote",
+    },
+    {
+      title: "Referral Rewards",
+      description: "Earn $AACCUMA tokens for every successful referral. Multi-tier referral system with escalating rewards.",
+      icon: "Users",
+    },
+    {
+      title: "Performance Bonuses",
+      description: "Top-performing strategies earn additional $AACCUMA rewards, incentivizing optimal accumulation behavior.",
+      icon: "Trophy",
+    },
+    {
+      title: "Exclusive Access",
+      description: "Hold $AACCUMA to unlock beta features, elite pathways, institutional tools, and private community channels.",
+      icon: "Key",
+    },
+  ],
+  referralTiers: [
+    { tier: "Bronze", requirement: "1-5 referrals", reward: "5% of referee's first month subscription in $AACCUMA" },
+    { tier: "Silver", requirement: "6-15 referrals", reward: "8% + 2% recurring monthly for 6 months" },
+    { tier: "Gold", requirement: "16-50 referrals", reward: "12% + 3% recurring monthly for 12 months" },
+    { tier: "Platinum", requirement: "51+ referrals", reward: "15% + 5% recurring monthly + VIP status" },
+  ],
+} as const;

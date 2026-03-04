@@ -1,18 +1,14 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { ASSETS } from "@/lib/constants";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src={ASSETS.images.heroBanner}
-          alt=""
-          className="w-full h-full object-cover opacity-40"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0D1A]/60 via-[#0B0D1A]/40 to-[#0B0D1A]" />
+      {/* Pure CSS Background */}
+      <div className="absolute inset-0 z-0 bg-[#0B0D1A]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_50%,rgba(74,144,217,0.12),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgba(155,89,182,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_80%,rgba(217,70,168,0.08),transparent_50%)]" />
       </div>
 
       {/* Ambient Glow Orbs */}

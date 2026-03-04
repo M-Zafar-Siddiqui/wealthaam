@@ -1,6 +1,6 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { ASSETS, BEAR_MARKET_SCENARIOS, DEFENSE_LAYERS } from "@/lib/constants";
-import { Shield, AlertTriangle, TrendingUp, ChevronRight } from "lucide-react";
+import { BEAR_MARKET_SCENARIOS, DEFENSE_LAYERS } from "@/lib/constants";
+import { Shield, AlertTriangle, TrendingUp } from "lucide-react";
 
 export function BlackSwanSection() {
   return (
@@ -30,28 +30,21 @@ export function BlackSwanSection() {
           </div>
         </AnimatedSection>
 
-        {/* Black Swan Image */}
+        {/* Philosophy Banner (replaces image) */}
         <AnimatedSection delay={0.1}>
-          <div className="max-w-4xl mx-auto mb-16 rounded-2xl overflow-hidden border border-white/5">
-            <img
-              src={ASSETS.images.blackSwan}
-              alt="Black Swan Resilience"
-              className="w-full h-auto"
-            />
-            <div className="bg-[#111328]/80 backdrop-blur-sm px-6 py-4 flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="text-[#22D3EE] text-xs font-semibold uppercase tracking-wider mb-1">
-                  The AAM Philosophy
-                </p>
-                <p className="text-white/80 text-sm italic">
-                  "We don't just trade to make money — we trade to accumulate more assets."
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <span className="px-3 py-1 text-xs font-medium text-[#22D3EE] border border-[#22D3EE]/30 rounded-full">
+          <div className="max-w-4xl mx-auto mb-16 rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-r from-[#0B0D1A] via-[#111328] to-[#0B0D1A]">
+            <div className="px-8 py-8 text-center">
+              <p className="text-[#22D3EE] text-xs font-semibold uppercase tracking-wider mb-3">
+                The AAM Philosophy
+              </p>
+              <p className="text-white/80 text-xl italic font-light leading-relaxed">
+                "We don't just trade to make money — we trade to accumulate more assets."
+              </p>
+              <div className="flex justify-center gap-3 mt-5">
+                <span className="px-4 py-1.5 text-xs font-medium text-[#22D3EE] border border-[#22D3EE]/30 rounded-full">
                   Market Agnostic
                 </span>
-                <span className="px-3 py-1 text-xs font-medium text-[#22D3EE] border border-[#22D3EE]/30 rounded-full">
+                <span className="px-4 py-1.5 text-xs font-medium text-[#22D3EE] border border-[#22D3EE]/30 rounded-full">
                   Non-Custodial
                 </span>
               </div>
