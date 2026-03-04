@@ -15,6 +15,7 @@ export const ASSETS = {
 export const NAV_LINKS = [
   { label: "Philosophy", href: "#philosophy" },
   { label: "Features", href: "#features" },
+  { label: "Assets", href: "#assets" },
   { label: "Black Swan", href: "#blackswan" },
   { label: "Architecture", href: "#architecture" },
   { label: "AI Agents", href: "#agents" },

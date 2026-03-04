@@ -3,6 +3,7 @@ import { Footer } from "@/components/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { TurtleSnowballSection } from "@/components/sections/TurtleSnowballSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
+import { AssetsSection } from "@/components/sections/AssetsSection";
 import { BlackSwanSection } from "@/components/sections/BlackSwanSection";
 import { ArchitectureSection } from "@/components/sections/ArchitectureSection";
 import { AgentsSection } from "@/components/sections/AgentsSection";
@@ -18,6 +19,7 @@ export default function Home() {
       <HeroSection />
       <TurtleSnowballSection />
       <FeaturesSection />
+      <AssetsSection />
       <BlackSwanSection />
       <ArchitectureSection />
       <AgentsSection />
