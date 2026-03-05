@@ -31,10 +31,10 @@ export function HeroSection() {
           <AnimatedSection delay={0.1}>
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight mb-6">
               <span className="text-white">The First </span>
-              <span className="gradient-text">Market Agnostic</span>
+              <span className="gradient-text">Asset-Centric</span>
               <br />
-              <span className="text-white">Asset-Centric </span>
-              <span className="gradient-text">Wealth Engine</span>
+              <span className="gradient-text">Wealth Management </span>
+              <span className="text-white">Platform</span>
             </h1>
           </AnimatedSection>
 
