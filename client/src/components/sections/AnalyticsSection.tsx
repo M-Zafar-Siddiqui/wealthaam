@@ -1,6 +1,15 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PERFORMANCE_METRICS } from "@/lib/constants";
-import { BarChart3, Activity } from "lucide-react";
+import { BarChart3, Activity, Database } from "lucide-react";
+
+const AACCUMA_STATS = [
+  { value: "72 / 346", label: "Strategy Containers", sublabel: "Active / Total" },
+  { value: "50,738", label: "Total Trades", sublabel: "Executed" },
+  { value: "702.3K%", label: "Avg AAR%", sublabel: "Asset Accumulation Rate" },
+  { value: "62.6%", label: "Avg Win Rate", sublabel: "Across All Strategies" },
+  { value: "472.8", label: "Avg SAAI", sublabel: "Strategy Accumulation Index" },
+  { value: "11.6", label: "Avg Profit Factor", sublabel: "Gross Profit / Gross Loss" },
+];
 
 export function AnalyticsSection() {
   return (
@@ -20,6 +29,29 @@ export function AnalyticsSection() {
               WealthAAM's proprietary analytics framework transforms traditional market data into
               actionable asset accumulation insights with 10 key performance metrics.
             </p>
+          </div>
+        </AnimatedSection>
+
+        {/* AACCUMA Dashboard Live Stats */}
+        <AnimatedSection delay={0.1}>
+          <div className="mb-16">
+            <div className="flex items-center justify-center gap-2 mb-8">
+              <Database size={16} className="text-emerald-400" />
+              <span className="text-sm font-semibold text-emerald-400 uppercase tracking-wider">AACCUMA Dashboard — Live Stats</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {AACCUMA_STATS.map((stat, i) => (
+                <div
+                  key={stat.label}
+                  className="glass-card rounded-2xl p-5 text-center group"
+                >
+                  <p className="text-2xl lg:text-3xl font-extrabold font-mono gradient-text mb-1">{stat.value}</p>
+                  <p className="text-xs font-bold text-white/70 mb-0.5">{stat.label}</p>
+                  <p className="text-[10px] text-white/30">{stat.sublabel}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </AnimatedSection>
 

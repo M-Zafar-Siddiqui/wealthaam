@@ -10,7 +10,7 @@ export function Footer() {
             <img
               src={ASSETS.logo.footer}
               alt="WealthAAM"
-              className="h-10 w-auto mb-4"
+              className="h-12 w-auto mb-4"
             />
             <p className="text-sm text-white/40 leading-relaxed mb-4">
               Advanced Asset Accumulation Model — the First Asset-Centric Digital Tokenized Assets

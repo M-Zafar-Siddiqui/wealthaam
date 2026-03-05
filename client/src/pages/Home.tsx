@@ -8,6 +8,7 @@ import { BlackSwanSection } from "@/components/sections/BlackSwanSection";
 import { ArchitectureSection } from "@/components/sections/ArchitectureSection";
 import { AgentsSection } from "@/components/sections/AgentsSection";
 import { AnalyticsSection } from "@/components/sections/AnalyticsSection";
+import { PerformanceSection } from "@/components/sections/PerformanceSection";
 import { PathwaysSection } from "@/components/sections/PathwaysSection";
 import { TokenSection } from "@/components/sections/TokenSection";
 import { SubscriptionSection } from "@/components/sections/SubscriptionSection";
@@ -24,6 +25,7 @@ export default function Home() {
       <ArchitectureSection />
       <AgentsSection />
       <AnalyticsSection />
+      <PerformanceSection />
       <PathwaysSection />
       <TokenSection />
       <SubscriptionSection />

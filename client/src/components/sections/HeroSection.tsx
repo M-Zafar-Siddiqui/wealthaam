@@ -80,10 +80,10 @@ export function HeroSection() {
           <AnimatedSection delay={0.4}>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-16 pt-8 border-t border-white/5">
               {[
-                { value: "303%–1,236%", label: "AAR Range" },
-                { value: "6 AI", label: "Agents" },
-                { value: "50M+", label: "Data Points/Day" },
-                { value: "72%–89%", label: "Win Rate" },
+                { value: "72 / 346", label: "Strategy Containers" },
+                { value: "50,738", label: "Total Trades" },
+                { value: "702.3K%", label: "Avg AAR%" },
+                { value: "62.6%", label: "Avg Win Rate" },
               ].map((stat) => (
                 <div key={stat.label}>
                   <p className="text-2xl sm:text-3xl font-bold gradient-text font-mono">{stat.value}</p>

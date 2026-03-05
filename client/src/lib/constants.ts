@@ -1,9 +1,9 @@
 // WealthAAM CDN Assets
 export const ASSETS = {
   logo: {
-    header: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/WealthAAMLogoHeader_668c71f0.png",
-    footer: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/WealthAAMLogofooter_dae324c2.png",
-    favicon: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/WealthAAMFavicon_f0b6d084.png",
+    header: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030055216/lqJbSxsuymGNKNHX.png",
+    footer: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030055216/GvieFveZcuaKljFs.png",
+    favicon: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030055216/lmlVMoYODQkWeXMg.png",
   },
   images: {
     pathwaysVisual: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030055216/WBVS3mAKGLmF2rKomRzShD/pathways-visual_e21d0964.png",
