@@ -197,7 +197,7 @@ export const PERFORMANCE_METRICS = [
 
 export const SUBSCRIPTION_TIERS = [
   {
-    name: "BASIC",
+    name: "FOUNDATION",
     tier: "Basic",
     price: 29,
     yearlyPrice: 313.20,
@@ -224,7 +224,7 @@ export const SUBSCRIPTION_TIERS = [
     tagline: "Accelerate Your Wealth",
     badge: "POPULAR",
     features: [
-      "Everything in BASIC, PLUS:",
+      "Everything in Foundation, PLUS:",
       "AGM Advanced — 6hr, 12hr, 24hr",
       "4 Premium Wealth Pathways",
       "3 CEX + 6 sub-accounts",
