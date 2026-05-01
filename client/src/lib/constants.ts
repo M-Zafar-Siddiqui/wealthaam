@@ -224,7 +224,7 @@ export const SUBSCRIPTION_TIERS = [
     tagline: "Accelerate Your Wealth",
     badge: "POPULAR",
     features: [
-      "Everything in Foundation, PLUS:",
+      "Everything in BASIC, PLUS:",
       "AGM Advanced — 6hr, 12hr, 24hr",
       "4 Premium Wealth Pathways",
       "3 CEX + 6 sub-accounts",
