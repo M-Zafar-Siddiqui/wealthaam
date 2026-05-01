@@ -227,6 +227,22 @@ export function SubscriptionSection() {
           </div>
         </AnimatedSection>
 
+        {/* Why Bundle Callout */}
+        <AnimatedSection delay={0.15}>
+          <div className="max-w-3xl mx-auto mb-10 rounded-2xl border border-[#D946A8]/20 bg-gradient-to-r from-[#4A90D9]/8 via-[#9B59B6]/8 to-[#D946A8]/8 px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4A90D9] to-[#D946A8] flex items-center justify-center shrink-0">
+              <Info size={18} className="text-white" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white mb-1">Why bundle with AACCUMA?</p>
+              <p className="text-xs text-white/50 leading-relaxed">
+                AACCUMA's proprietary AAM analytics power the AI risk controls inside the AGM engine — providing real-time asset accumulation metrics, Turtle Effect tracking, and Snowball compounding signals that keep your strategies calibrated across every market cycle.
+                <a href="https://aaccuma.com" target="_blank" rel="noopener noreferrer" className="ml-1.5 text-[#D946A8] hover:text-[#FF6B9D] font-semibold transition-colors">Explore AACCUMA →</a>
+              </p>
+            </div>
+          </div>
+        </AnimatedSection>
+
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
           {TIERS.map((tier, i) => {
@@ -379,6 +395,14 @@ export function SubscriptionSection() {
                           </div>
                         ))}
                       </div>
+                      <a
+                        href="https://aaccuma.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 mt-3 text-[11px] text-[#D946A8] hover:text-[#FF6B9D] font-semibold transition-colors"
+                      >
+                        Learn more about AACCUMA →
+                      </a>
                     </div>
                   )}
 
