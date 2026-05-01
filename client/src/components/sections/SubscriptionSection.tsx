@@ -101,13 +101,13 @@ export function SubscriptionSection() {
                 <div className="mb-6">
                   <div className="flex items-baseline gap-1">
                     <span className="text-3xl font-extrabold text-white">
-                      ${isYearly ? (tier.yearlyPrice / 12).toFixed(2) : tier.price}
+                      ${isYearly ? Math.round(tier.yearlyPrice / 12) : tier.price}
                     </span>
                     <span className="text-sm text-white/30">/month</span>
                   </div>
                   {isYearly && (
                     <p className="text-xs text-emerald-400 mt-1">
-                      ${tier.yearlyPrice}/year (save 10%)
+                      ${tier.yearlyPrice.toFixed(0)}/year (save 10%)
                     </p>
                   )}
                 </div>

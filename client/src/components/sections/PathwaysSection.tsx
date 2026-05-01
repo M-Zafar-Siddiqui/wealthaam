@@ -32,17 +32,6 @@ export function PathwaysSection() {
           </div>
         </AnimatedSection>
 
-        {/* Pathways Visual */}
-        <AnimatedSection delay={0.1}>
-          <div className="max-w-3xl mx-auto mb-12 rounded-2xl overflow-hidden border border-white/10">
-            <img
-              src={ASSETS.images.pathwaysVisual}
-              alt="WealthAAM Wealth Pathways"
-              className="w-full h-auto"
-            />
-          </div>
-        </AnimatedSection>
-
         {/* Tab Navigation */}
         <AnimatedSection delay={0.15}>
           <div className="flex flex-wrap justify-center gap-2 mb-10">

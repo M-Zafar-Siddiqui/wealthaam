@@ -27,17 +27,6 @@ export function ArchitectureSection() {
           </div>
         </AnimatedSection>
 
-        {/* Architecture Visual from user */}
-        <AnimatedSection delay={0.1}>
-          <div className="max-w-3xl mx-auto mb-16 rounded-2xl overflow-hidden border border-white/10">
-            <img
-              src={ASSETS.images.architectureLayers}
-              alt="Modular Multi-Layered Architecture"
-              className="w-full h-auto"
-            />
-          </div>
-        </AnimatedSection>
-
         {/* Layers Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
           {/* Core Layers */}

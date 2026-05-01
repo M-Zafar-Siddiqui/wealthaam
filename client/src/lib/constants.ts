@@ -197,10 +197,10 @@ export const PERFORMANCE_METRICS = [
 
 export const SUBSCRIPTION_TIERS = [
   {
-    name: "FOUNDATION",
+    name: "BASIC",
     tier: "Basic",
-    price: 29.99,
-    yearlyPrice: 323.89,
+    price: 29,
+    yearlyPrice: 313.20,
     tagline: "Start Your Wealth Journey",
     badge: null,
     features: [
@@ -219,8 +219,8 @@ export const SUBSCRIPTION_TIERS = [
   {
     name: "ACCELERATOR",
     tier: "Advanced",
-    price: 49.99,
-    yearlyPrice: 539.89,
+    price: 49,
+    yearlyPrice: 529.20,
     tagline: "Accelerate Your Wealth",
     badge: "POPULAR",
     features: [
@@ -241,8 +241,8 @@ export const SUBSCRIPTION_TIERS = [
   {
     name: "POWERHOUSE",
     tier: "Pro",
-    price: 99.99,
-    yearlyPrice: 1079.89,
+    price: 99,
+    yearlyPrice: 1069.20,
     tagline: "Professional-Grade Management",
     badge: "BEST VALUE",
     features: [
@@ -266,8 +266,8 @@ export const SUBSCRIPTION_TIERS = [
   {
     name: "PINNACLE",
     tier: "Elite",
-    price: 199.99,
-    yearlyPrice: 2159.89,
+    price: 199,
+    yearlyPrice: 2149.20,
     tagline: "Elite Wealth Management",
     badge: "ELITE",
     features: [

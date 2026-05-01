@@ -25,17 +25,6 @@ export function AgentsSection() {
           </div>
         </AnimatedSection>
 
-        {/* Agents Network Visual from user */}
-        <AnimatedSection delay={0.1}>
-          <div className="max-w-3xl mx-auto mb-16 rounded-2xl overflow-hidden border border-white/10">
-            <img
-              src={ASSETS.images.aiAgentsNetwork}
-              alt="Multi-AI Agent System Network"
-              className="w-full h-auto"
-            />
-          </div>
-        </AnimatedSection>
-
         {/* Agent Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {AI_AGENTS.map((agent, i) => (
