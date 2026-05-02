@@ -163,6 +163,148 @@ function calcPrice(basePrice: number, billing: BillingPeriod, isBundle: boolean)
   return basePrice;
 }
 
+// ─── Compare All Features Table ───────────────────────────────────────────
+const COMPARE_CATEGORIES = [
+  {
+    category: "Core Engine",
+    rows: [
+      { label: "AGM Timeframes", values: ["12hr & 24hr", "6hr, 12hr, 24hr", "4hr, 6hr, 12hr, 24hr", "1hr–24hr + HIPs"] },
+      { label: "Wealth Pathways", values: ["2 Pathways", "4 Pathways", "6 Elite Pathways", "All + Custom HIPs"] },
+      { label: "Auto-Rebalancing", values: ["Quarterly", "Monthly", "Bi-weekly", "Real-Time"] },
+      { label: "AI Assistant", values: ["Basic", "Advanced + Voice", "Voice AI", "Virtual Wealth Advisor"] },
+    ],
+  },
+  {
+    category: "Exchange & Assets",
+    rows: [
+      { label: "CEX / DEX Connections", values: ["1 CEX", "3 CEX", "10 CEX & DEX", "10+ CEX & DEX"] },
+      { label: "Sub-accounts", values: ["2", "6", "10", "15"] },
+      { label: "Crypto Coverage", values: ["Top 10", "Top 25", "Top 100", "100+"] },
+      { label: "xStocks", values: ["—", "10 xStocks", "25 xStocks", "25+ xStocks"] },
+      { label: "Commodities (Gold etc.)", values: ["—", "—", "✓", "✓"] },
+      { label: "Traditional Stocks", values: ["—", "—", "—", "Custom"] },
+    ],
+  },
+  {
+    category: "Analytics & Reporting",
+    rows: [
+      { label: "Analytics History", values: ["30 days", "1 year", "Unlimited", "Unlimited"] },
+      { label: "Smart Alerts", values: ["—", "25", "100", "Unlimited"] },
+      { label: "Benchmarks", values: ["—", "✓", "✓", "✓"] },
+      { label: "Tax-Loss Harvesting", values: ["—", "Insights", "Full Package", "White-Glove CPA"] },
+      { label: "API Access", values: ["—", "—", "Full API", "Enterprise + SLA"] },
+    ],
+  },
+  {
+    category: "AACCUMA Analytics (Bundle)",
+    rows: [
+      { label: "Asset Coverage", values: ["Crypto only", "Crypto + xStocks", "Crypto, xStocks, Commodities", "Custom (all assets)"] },
+      { label: "AAM Metrics", values: ["Basic (AAR%, SAAI)", "Full Suite", "Advanced + xCOMPOSITE/xRISK", "All xSeries Metrics"] },
+      { label: "Turtle Effect Tracker", values: ["✓", "✓", "✓", "✓"] },
+      { label: "Snowball Calculator", values: ["—", "✓", "✓", "✓"] },
+      { label: "Real-Time AI Risk Controls", values: ["—", "—", "✓", "✓"] },
+      { label: "Low-Timeframe AI Analytics", values: ["—", "—", "✓", "✓"] },
+      { label: "Beta Feature Access", values: ["—", "—", "—", "✓"] },
+    ],
+  },
+  {
+    category: "Support",
+    rows: [
+      { label: "Support Channel", values: ["Email", "Priority Email", "Live Chat + Email", "VIP + Phone"] },
+      { label: "Response Time", values: ["48hr", "24hr", "12hr", "4hr"] },
+      { label: "AI Account Manager", values: ["—", "—", "✓", "✓"] },
+      { label: "AGM Academy Access", values: ["✓", "✓", "✓", "✓"] },
+    ],
+  },
+];
+
+const TIER_NAMES = ["FOUNDATION", "ACCELERATOR", "POWERHOUSE", "PINNACLE"];
+const TIER_COLORS = ["text-[#4A90D9]", "text-[#6B5CBF]", "text-[#9B59B6]", "text-[#D946A8]"];
+
+function CompareTable() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="mt-6">
+      {/* Toggle Button */}
+      <div className="flex justify-center mb-4">
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all"
+        >
+          <span>{open ? "Hide" : "See full"} feature comparison</span>
+          <svg
+            className={`w-4 h-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Expandable Table */}
+      <div
+        className={`overflow-hidden transition-all duration-500 ease-in-out ${
+          open ? "max-h-[4000px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="glass-card rounded-2xl overflow-x-auto">
+          <table className="w-full text-xs min-w-[700px]">
+            <thead>
+              <tr className="border-b border-white/10">
+                <th className="text-left text-white/40 font-semibold py-4 px-5 w-[220px]">Feature</th>
+                {TIER_NAMES.map((name, i) => (
+                  <th key={name} className={`text-center font-bold py-4 px-4 ${TIER_COLORS[i]}`}>
+                    {name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {COMPARE_CATEGORIES.map((cat) => (
+                <>
+                  {/* Category Header Row */}
+                  <tr key={cat.category} className="bg-white/3">
+                    <td
+                      colSpan={5}
+                      className="py-2.5 px-5 text-[10px] font-bold uppercase tracking-widest text-white/30"
+                    >
+                      {cat.category}
+                    </td>
+                  </tr>
+                  {/* Feature Rows */}
+                  {cat.rows.map((row, ri) => (
+                    <tr
+                      key={row.label}
+                      className={`border-b border-white/5 transition-colors hover:bg-white/2 ${
+                        ri % 2 === 0 ? "" : "bg-white/1"
+                      }`}
+                    >
+                      <td className="py-3 px-5 text-white/50 font-medium">{row.label}</td>
+                      {row.values.map((val, vi) => (
+                        <td key={vi} className="py-3 px-4 text-center">
+                          {val === "✓" ? (
+                            <span className={`font-bold ${TIER_COLORS[vi]}`}>✓</span>
+                          ) : val === "—" ? (
+                            <span className="text-white/15">—</span>
+                          ) : (
+                            <span className="text-white/55">{val}</span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Section ────────────────────────────────────────────────────────────
 export function SubscriptionSection() {
   const [billing, setBilling] = useState<BillingPeriod>("monthly");
   // Per-card AACCUMA toggle state (only relevant for Foundation & Accelerator)
@@ -460,6 +602,11 @@ export function SubscriptionSection() {
               * Annual bundle: additional 25% off · Quarterly bundle: additional 10% off · Standalone WealthAAM pricing has no billing period discount.
             </p>
           </div>
+        </AnimatedSection>
+
+        {/* Compare All Features */}
+        <AnimatedSection delay={0.45}>
+          <CompareTable />
         </AnimatedSection>
 
         {/* Institutional */}
