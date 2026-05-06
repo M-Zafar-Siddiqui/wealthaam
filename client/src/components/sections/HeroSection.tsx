@@ -1,5 +1,71 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+// ─── Animated counter hook ────────────────────────────────────────────────────
+function useCountUp(target: number, duration = 1800, decimals = 0, startOnVisible = true) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (!startOnVisible) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const start = performance.now();
+          const step = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            // ease-out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setValue(parseFloat((eased * target).toFixed(decimals)));
+            if (progress < 1) requestAnimationFrame(step);
+            else setValue(target);
+          };
+          requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration, decimals, startOnVisible]);
+
+  return { value, ref };
+}
+
+// ─── Individual stat with counter ────────────────────────────────────────────
+function AnimatedStat({
+  prefix = "",
+  target,
+  suffix = "",
+  decimals = 0,
+  label,
+}: {
+  prefix?: string;
+  target: number;
+  suffix?: string;
+  decimals?: number;
+  label: string;
+}) {
+  const { value, ref } = useCountUp(target, 1800, decimals);
+  return (
+    <div>
+      <p className="text-2xl sm:text-3xl font-bold gradient-text font-mono">
+        <span ref={ref}>
+          {prefix}
+          {decimals > 0 ? value.toFixed(decimals) : value.toLocaleString()}
+          {suffix}
+        </span>
+      </p>
+      <p className="text-xs text-white/40 mt-1 uppercase tracking-wider">{label}</p>
+    </div>
+  );
+}
 
 export function HeroSection() {
   return (
@@ -76,20 +142,23 @@ export function HeroSection() {
             </div>
           </AnimatedSection>
 
-          {/* Key Stats */}
+          {/* Key Stats — animated counters */}
           <AnimatedSection delay={0.4}>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-16 pt-8 border-t border-white/5">
-              {[
-                { value: "303%–1,236%", label: "AAR Range" },
-                { value: "6 AI", label: "Agents" },
-                { value: "50M+", label: "Data Points/Day" },
-                { value: "72%–89%", label: "Win Rate" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <p className="text-2xl sm:text-3xl font-bold gradient-text font-mono">{stat.value}</p>
-                  <p className="text-xs text-white/40 mt-1 uppercase tracking-wider">{stat.label}</p>
-                </div>
-              ))}
+              {/* AAR Range — static text, no counter needed */}
+              <div>
+                <p className="text-2xl sm:text-3xl font-bold gradient-text font-mono">303–1,236%</p>
+                <p className="text-xs text-white/40 mt-1 uppercase tracking-wider">AAR Range</p>
+              </div>
+              {/* Animated: 6 AI Agents */}
+              <AnimatedStat target={6} suffix=" AI" label="Agents" />
+              {/* Animated: 50M+ Data Points */}
+              <AnimatedStat target={50} suffix="M+" label="Data Points/Day" />
+              {/* Win Rate — static range */}
+              <div>
+                <p className="text-2xl sm:text-3xl font-bold gradient-text font-mono">72–89%</p>
+                <p className="text-xs text-white/40 mt-1 uppercase tracking-wider">Win Rate</p>
+              </div>
             </div>
           </AnimatedSection>
         </div>

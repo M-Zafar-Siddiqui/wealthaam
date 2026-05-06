@@ -2,6 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { TurtleSnowballSection } from "@/components/sections/TurtleSnowballSection";
+import { HowItWorksSection } from "@/components/sections/HowItWorksSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { AssetsSection } from "@/components/sections/AssetsSection";
 import { BlackSwanSection } from "@/components/sections/BlackSwanSection";
@@ -17,6 +18,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#0B0D1A]">
       <Navbar />
       <HeroSection />
+      <HowItWorksSection />
       <TurtleSnowballSection />
       <FeaturesSection />
       <AssetsSection />
