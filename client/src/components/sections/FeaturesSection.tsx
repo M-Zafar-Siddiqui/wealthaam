@@ -54,34 +54,76 @@ export function FeaturesSection() {
           </div>
         </AnimatedSection>
 
-        {/* Features Grid — color-per-card */}
+        {/* Features Grid — color-per-card with hover animations */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {FEATURES.map((feature, i) => {
             const accent = CARD_ACCENTS[i];
             return (
               <AnimatedSection key={feature.title} delay={i * 0.07}>
                 <div
-                  className={`rounded-2xl border ${accent.border} ${accent.hover} bg-gradient-to-b from-[#0D1020]/90 to-[#090E18]/90 p-6 h-full group transition-all duration-300 backdrop-blur-sm`}
-                  style={{ boxShadow: `0 0 25px ${accent.glow}0D` }}
+                  className={`relative rounded-2xl border ${accent.border} ${accent.hover} bg-gradient-to-b from-[#0D1020]/90 to-[#090E18]/90 p-6 h-full group overflow-hidden
+                    transition-all duration-300 ease-out backdrop-blur-sm
+                    hover:-translate-y-1.5 hover:shadow-lg`}
+                  style={{
+                    boxShadow: `0 0 25px ${accent.glow}0D`,
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = `0 8px 32px ${accent.glow}28, 0 0 0 1px ${accent.glow}30`;
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 25px ${accent.glow}0D`;
+                  }}
                 >
-                  {/* Icon */}
+                  {/* Shimmer sweep on hover */}
                   <div
-                    className={`w-11 h-11 rounded-xl ${accent.bg} border ${accent.border} flex items-center justify-center mb-5 ${accent.icon} group-hover:scale-110 transition-transform duration-300`}
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                    style={{
+                      background: `linear-gradient(105deg, transparent 30%, ${accent.glow}10 50%, transparent 70%)`,
+                      transform: "translateX(-100%)",
+                      animation: "none",
+                    }}
+                  />
+                  <div
+                    className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl"
+                  >
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        background: `radial-gradient(ellipse at top left, ${accent.glow}08 0%, transparent 60%)`,
+                      }}
+                    />
+                  </div>
+
+                  {/* Icon — scale + rotate on hover */}
+                  <div
+                    className={`relative w-11 h-11 rounded-xl ${accent.bg} border ${accent.border} flex items-center justify-center mb-5 ${accent.icon}
+                      group-hover:scale-110 group-hover:rotate-3
+                      transition-transform duration-300 ease-out`}
                   >
                     {iconMap[feature.icon]}
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-base font-bold text-white mb-2 leading-snug">{feature.title}</h3>
+                  {/* Title — subtle color shift on hover */}
+                  <h3
+                    className="relative text-base font-bold text-white mb-2 leading-snug
+                      group-hover:text-white transition-colors duration-200"
+                  >
+                    {feature.title}
+                  </h3>
 
-                  {/* Description */}
-                  <p className="text-sm text-white/50 leading-relaxed">{feature.description}</p>
+                  {/* Description — slightly brighter on hover */}
+                  <p className="relative text-sm text-white/50 group-hover:text-white/65 leading-relaxed transition-colors duration-300">
+                    {feature.description}
+                  </p>
 
-                  {/* Bottom accent line */}
-                  <div
-                    className="mt-5 h-0.5 rounded-full opacity-0 group-hover:opacity-40 transition-opacity duration-300"
-                    style={{ background: `linear-gradient(90deg, transparent, ${accent.glow}, transparent)` }}
-                  />
+                  {/* Bottom accent line — slides in from left on hover */}
+                  <div className="relative mt-5 h-0.5 rounded-full overflow-hidden bg-white/5">
+                    <div
+                      className="absolute inset-y-0 left-0 w-0 group-hover:w-full rounded-full transition-all duration-500 ease-out"
+                      style={{ background: `linear-gradient(90deg, ${accent.glow}, ${accent.glow}80)` }}
+                    />
+                  </div>
                 </div>
               </AnimatedSection>
             );
