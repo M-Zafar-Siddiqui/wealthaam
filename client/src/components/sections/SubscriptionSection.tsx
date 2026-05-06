@@ -1,5 +1,5 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
-import React, { useState } from "react";
+import { useState, Fragment } from "react";
 import { Check, Crown, Star, Zap, Gem, Info } from "lucide-react";
 import { toast } from "sonner";
 
@@ -262,7 +262,7 @@ function CompareTable() {
             </thead>
             <tbody>
               {COMPARE_CATEGORIES.map((cat) => (
-                <React.Fragment key={cat.category + '-frag'}>
+                <Fragment key={cat.category + '-frag'}>
                   {/* Category Header Row */}
                   <tr key={cat.category} className="bg-white/3">
                     <td
@@ -294,7 +294,7 @@ function CompareTable() {
                       ))}
                     </tr>
                   ))}
-                </React.Fragment>
+                </Fragment>
               ))}
             </tbody>
           </table>
