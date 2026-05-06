@@ -263,7 +263,6 @@ function CompareTable() {
             <tbody>
               {COMPARE_CATEGORIES.map((cat) => (
                 <Fragment key={cat.category + '-frag'}>
-                  {/* Category Header Row */}
                   <tr key={cat.category} className="bg-white/3">
                     <td
                       colSpan={5}
@@ -272,7 +271,7 @@ function CompareTable() {
                       {cat.category}
                     </td>
                   </tr>
-                  {/* Feature Rows */}
+
                   {cat.rows.map((row, ri) => (
                     <tr
                       key={row.label}
