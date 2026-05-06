@@ -7,7 +7,7 @@
  * - Layout: Fixed sidebar + scrollable main content
  */
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Link } from "wouter";
 
 // ─── AAM Metric Prefix Colors ───────────────────────────────────────────────
@@ -225,9 +225,22 @@ const ECOST_DATA = [
   { month: "Dec", eCost: 0.76, price: 4.28, qty: 5.01 },
 ];
 
+// Tooltip data derived from ECOST_DATA
+function getTooltipData(i: number) {
+  const d = ECOST_DATA[i];
+  const initial = ECOST_DATA[0];
+  const reductionPct = (((initial.eCost - d.eCost) / initial.eCost) * 100).toFixed(1);
+  const gapPct = (((d.price - d.eCost) / d.price) * 100).toFixed(1);
+  const qtyGain = ((d.qty - 1) * 100).toFixed(0);
+  return { ...d, reductionPct, gapPct, qtyGain };
+}
+
 function ECostChart() {
   const [hovered, setHovered] = useState<number | null>(null);
-  const W = 560; const H = 180; const PAD = { t: 16, r: 16, b: 32, l: 44 };
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const W = 560; const H = 200; const PAD = { t: 16, r: 16, b: 32, l: 44 };
   const innerW = W - PAD.l - PAD.r;
   const innerH = H - PAD.t - PAD.b;
   const n = ECOST_DATA.length;
@@ -240,8 +253,30 @@ function ECostChart() {
   const pricePath = ECOST_DATA.map((d, i) => `${i === 0 ? "M" : "L"}${PAD.l + i * xStep},${PAD.t + yScale(d.price)}`).join(" ");
   const eCostArea = eCostPath + ` L${PAD.l + (n-1)*xStep},${PAD.t + innerH} L${PAD.l},${PAD.t + innerH} Z`;
 
+  const handleMouseEnter = useCallback((i: number, svgX: number, svgY: number) => {
+    setHovered(i);
+    // Convert SVG coords to container-relative coords
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      // svgX/svgY are SVG units; the SVG scales to maxWidth:100%
+      const svgEl = containerRef.current.querySelector("svg");
+      if (svgEl) {
+        const svgRect = svgEl.getBoundingClientRect();
+        const scaleX = svgRect.width / W;
+        const px = svgX * scaleX;
+        const py = svgY * (svgRect.height / H);
+        setTooltipPos({ x: px, y: py });
+      }
+    }
+  }, [W, H]);
+
+  const tooltipData = hovered !== null ? getTooltipData(hovered) : null;
+
   return (
-    <div style={{ background: "#0d1f2d", border: "1px solid #1a3044", borderRadius: 10, padding: "16px 18px", marginBottom: 20, fontFamily: "Arial, sans-serif" }}>
+    <div
+      ref={containerRef}
+      style={{ background: "#0d1f2d", border: "1px solid #1a3044", borderRadius: 10, padding: "16px 18px", marginBottom: 20, fontFamily: "Arial, sans-serif", position: "relative" }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
         <div>
           <div style={{ fontFamily: "Helvetica, Arial, sans-serif", fontWeight: 700, fontSize: 14, color: "#e2e8f0" }}>
@@ -252,60 +287,215 @@ function ECostChart() {
         <div style={{ display: "flex", gap: 16, fontSize: 10, color: "#4a5568", alignItems: "center" }}>
           <span><span style={{ display: "inline-block", width: 20, height: 2, background: "#F87171", verticalAlign: "middle", marginRight: 4 }} />eCOST</span>
           <span><span style={{ display: "inline-block", width: 20, height: 2, background: "#4A90D9", verticalAlign: "middle", marginRight: 4, borderTop: "2px dashed #4A90D9" }} />Market Price</span>
+          <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#22c55e", borderRadius: "50%", verticalAlign: "middle", marginRight: 4 }} />Qty ×</span>
         </div>
       </div>
-      <div style={{ overflowX: "auto" }}>
-        <svg width={W} height={H} style={{ display: "block", maxWidth: "100%" }}
-          onMouseLeave={() => setHovered(null)}>
+
+      {/* SVG Chart */}
+      <div style={{ overflowX: "auto", position: "relative" }}>
+        <svg
+          width={W}
+          height={H}
+          style={{ display: "block", maxWidth: "100%", cursor: "crosshair" }}
+          onMouseLeave={() => setHovered(null)}
+        >
           <defs>
             <linearGradient id="ecostGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#F87171" stopOpacity="0.25" />
+              <stop offset="0%" stopColor="#F87171" stopOpacity="0.22" />
               <stop offset="100%" stopColor="#F87171" stopOpacity="0" />
             </linearGradient>
+            <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#4A90D9" stopOpacity="0.10" />
+              <stop offset="100%" stopColor="#4A90D9" stopOpacity="0" />
+            </linearGradient>
           </defs>
-          {/* Y-axis gridlines */}
-          {[0.25, 0.5, 0.75, 1].map(f => (
-            <line key={f} x1={PAD.l} y1={PAD.t + innerH * (1-f)} x2={PAD.l + innerW} y2={PAD.t + innerH * (1-f)}
-              stroke="#1a3044" strokeWidth={1} />
+
+          {/* Y-axis gridlines + labels */}
+          {[0, 1, 2, 3, 4].map(v => (
+            <g key={v}>
+              <line x1={PAD.l} y1={PAD.t + yScale(v)} x2={PAD.l + innerW} y2={PAD.t + yScale(v)}
+                stroke="#1a3044" strokeWidth={v === 0 ? 1.5 : 1} strokeDasharray={v === 0 ? "0" : "3 4"} />
+              <text x={PAD.l - 6} y={PAD.t + yScale(v) + 4} textAnchor="end" fill="#4a5568" fontSize={9} fontFamily="Arial">${v}</text>
+            </g>
           ))}
+
           {/* eCOST area fill */}
           <path d={eCostArea} fill="url(#ecostGrad)" />
+
           {/* Price line (dashed) */}
           <path d={pricePath} fill="none" stroke="#4A90D9" strokeWidth={1.5} strokeDasharray="4 3" opacity={0.7} />
+
           {/* eCOST line */}
           <path d={eCostPath} fill="none" stroke="#F87171" strokeWidth={2} />
-          {/* Data points + hover */}
+
+          {/* Vertical crosshair on hover */}
+          {hovered !== null && (() => {
+            const cx = PAD.l + hovered * xStep;
+            return (
+              <line
+                x1={cx} y1={PAD.t}
+                x2={cx} y2={PAD.t + innerH}
+                stroke="rgba(255,255,255,0.12)"
+                strokeWidth={1}
+                strokeDasharray="3 3"
+              />
+            );
+          })()}
+
+          {/* Gap shading between eCOST and price on hovered column */}
+          {hovered !== null && (() => {
+            const cx = PAD.l + hovered * xStep;
+            const d = ECOST_DATA[hovered];
+            const cy = PAD.t + yScale(d.eCost);
+            const py = PAD.t + yScale(d.price);
+            return (
+              <line
+                x1={cx} y1={cy}
+                x2={cx} y2={py}
+                stroke="rgba(167,139,250,0.35)"
+                strokeWidth={2}
+                strokeDasharray="2 2"
+              />
+            );
+          })()}
+
+          {/* Data points */}
           {ECOST_DATA.map((d, i) => {
             const cx = PAD.l + i * xStep;
             const cy = PAD.t + yScale(d.eCost);
             const py = PAD.t + yScale(d.price);
+            const isHov = hovered === i;
             return (
-              <g key={i} onMouseEnter={() => setHovered(i)} style={{ cursor: "pointer" }}>
-                <rect x={cx - xStep/2} y={PAD.t} width={xStep} height={innerH} fill="transparent" />
-                <circle cx={cx} cy={cy} r={hovered === i ? 5 : 3} fill="#F87171" stroke="#07111d" strokeWidth={1.5} />
-                <circle cx={cx} cy={py} r={hovered === i ? 4 : 2} fill="#4A90D9" stroke="#07111d" strokeWidth={1} opacity={0.8} />
-                {hovered === i && (
-                  <g>
-                    <rect x={cx - 52} y={PAD.t - 2} width={104} height={52} rx={4} fill="#0d1f2d" stroke="#1a3044" strokeWidth={1} />
-                    <text x={cx} y={PAD.t + 12} textAnchor="middle" fill="#8899aa" fontSize={9} fontFamily="Arial">{d.month}</text>
-                    <text x={cx} y={PAD.t + 25} textAnchor="middle" fill="#F87171" fontSize={10} fontFamily="Arial" fontWeight="700">eCOST ${d.eCost.toFixed(2)}</text>
-                    <text x={cx} y={PAD.t + 38} textAnchor="middle" fill="#4A90D9" fontSize={10} fontFamily="Arial">Price ${d.price.toFixed(2)}</text>
-                    <text x={cx} y={PAD.t + 50} textAnchor="middle" fill="#22c55e" fontSize={9} fontFamily="Arial">{d.qty.toFixed(2)}× qty</text>
-                  </g>
-                )}
-                {/* X-axis labels */}
-                <text x={cx} y={H - 6} textAnchor="middle" fill="#4a5568" fontSize={9} fontFamily="Arial">{d.month}</text>
+              <g
+                key={i}
+                onMouseEnter={() => handleMouseEnter(i, cx, Math.min(cy, py) - 10)}
+                style={{ cursor: "pointer" }}
+              >
+                {/* Wide invisible hit area */}
+                <rect x={cx - xStep / 2} y={PAD.t} width={xStep} height={innerH} fill="transparent" />
+
+                {/* eCOST dot */}
+                <circle
+                  cx={cx} cy={cy}
+                  r={isHov ? 6 : 3.5}
+                  fill={isHov ? "#FF6B6B" : "#F87171"}
+                  stroke={isHov ? "#fff" : "#07111d"}
+                  strokeWidth={isHov ? 1.5 : 1.5}
+                  style={{ transition: "r 0.15s ease" }}
+                />
+
+                {/* Price dot */}
+                <circle
+                  cx={cx} cy={py}
+                  r={isHov ? 5 : 2.5}
+                  fill={isHov ? "#60a5fa" : "#4A90D9"}
+                  stroke={isHov ? "#fff" : "#07111d"}
+                  strokeWidth={isHov ? 1.5 : 1}
+                  opacity={0.9}
+                  style={{ transition: "r 0.15s ease" }}
+                />
+
+                {/* Qty dot (small, green, on a secondary scale) */}
+                {(() => {
+                  const qtyY = PAD.t + innerH - ((d.qty / 6) * innerH);
+                  return (
+                    <circle
+                      cx={cx} cy={qtyY}
+                      r={isHov ? 4 : 2}
+                      fill="#22c55e"
+                      stroke="#07111d"
+                      strokeWidth={1}
+                      opacity={0.75}
+                      style={{ transition: "r 0.15s ease" }}
+                    />
+                  );
+                })()}
+
+                {/* X-axis label */}
+                <text x={cx} y={H - 6} textAnchor="middle" fill={isHov ? "#e2e8f0" : "#4a5568"} fontSize={9} fontFamily="Arial" fontWeight={isHov ? "700" : "400"}>{d.month}</text>
               </g>
             );
           })}
-          {/* Y-axis labels */}
-          {[0, 1, 2, 3, 4].map(v => (
-            <text key={v} x={PAD.l - 6} y={PAD.t + yScale(v) + 4} textAnchor="end" fill="#4a5568" fontSize={9} fontFamily="Arial">${v}</text>
-          ))}
         </svg>
       </div>
+
+      {/* HTML Tooltip — absolutely positioned over the chart container */}
+      {tooltipData !== null && hovered !== null && (
+        <div
+          style={{
+            position: "absolute",
+            left: Math.min(tooltipPos.x + 12, (containerRef.current?.offsetWidth ?? 400) - 200),
+            top: Math.max(tooltipPos.y - 20, 50),
+            width: 188,
+            background: "#07111d",
+            border: "1px solid #2a4060",
+            borderRadius: 8,
+            padding: "10px 12px",
+            pointerEvents: "none",
+            zIndex: 50,
+            boxShadow: "0 8px 24px rgba(0,0,0,0.55), 0 0 0 1px rgba(248,113,113,0.15)",
+            fontFamily: "Arial, sans-serif",
+          }}
+        >
+          {/* Header */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, paddingBottom: 6, borderBottom: "1px solid #1a3044" }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#e2e8f0", fontFamily: "Helvetica, Arial, sans-serif" }}>{tooltipData.month} 2024</span>
+            <span style={{
+              fontSize: 9, fontWeight: 600, padding: "2px 6px", borderRadius: 10,
+              background: Number(tooltipData.reductionPct) > 0 ? "rgba(34,197,94,0.15)" : "rgba(248,113,113,0.15)",
+              color: Number(tooltipData.reductionPct) > 0 ? "#22c55e" : "#F87171",
+            }}>−{tooltipData.reductionPct}% eCOST</span>
+          </div>
+
+          {/* Rows */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            {/* eCOST */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#F87171" }} />
+                <span style={{ fontSize: 10, color: "#8899aa" }}>eCOST</span>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#F87171", fontFamily: "Helvetica, Arial, sans-serif" }}>${tooltipData.eCost.toFixed(2)}</span>
+            </div>
+
+            {/* Market Price */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#4A90D9" }} />
+                <span style={{ fontSize: 10, color: "#8899aa" }}>Market Price</span>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#4A90D9", fontFamily: "Helvetica, Arial, sans-serif" }}>${tooltipData.price.toFixed(2)}</span>
+            </div>
+
+            {/* Gap */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#A78BFA" }} />
+                <span style={{ fontSize: 10, color: "#8899aa" }}>Price Gap</span>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#A78BFA", fontFamily: "Helvetica, Arial, sans-serif" }}>{tooltipData.gapPct}% below</span>
+            </div>
+
+            {/* Qty */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
+                <span style={{ fontSize: 10, color: "#8899aa" }}>Qty Accumulated</span>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#22c55e", fontFamily: "Helvetica, Arial, sans-serif" }}>{tooltipData.qty.toFixed(2)}×</span>
+            </div>
+
+            {/* Qty gain */}
+            <div style={{ marginTop: 4, paddingTop: 5, borderTop: "1px solid #1a3044", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 9, color: "#4a5568" }}>Qty gain since start</span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#e2e8f0" }}>+{tooltipData.qtyGain}%</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Summary row */}
-      <div style={{ display: "flex", gap: 20, marginTop: 10, paddingTop: 10, borderTop: "1px solid #1a3044" }}>
+      <div style={{ display: "flex", gap: 20, marginTop: 10, paddingTop: 10, borderTop: "1px solid #1a3044", flexWrap: "wrap" }}>
         <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Initial eCOST</div><div style={{ fontSize: 14, fontWeight: 700, color: "#F87171", fontFamily: "Helvetica, Arial, sans-serif" }}>$2.84</div></div>
         <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Current eCOST</div><div style={{ fontSize: 14, fontWeight: 700, color: "#22c55e", fontFamily: "Helvetica, Arial, sans-serif" }}>$0.76</div></div>
         <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Reduction</div><div style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", fontFamily: "Helvetica, Arial, sans-serif" }}>−73.2%</div></div>
