@@ -306,12 +306,12 @@ export default function Hub() {
         </div>
 
         {/* CTA */}
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white hub-brand-gradient transition-all hover:brightness-110 hover:-translate-y-0.5">
+        <Link href="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white hub-brand-gradient transition-all hover:brightness-110 hover:-translate-y-0.5">
           Open Dashboard
           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
           </svg>
-        </button>
+        </Link>
 
         {/* User chip */}
         <div className="hidden sm:flex items-center gap-2 ml-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
@@ -347,12 +347,12 @@ export default function Hub() {
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3" /></svg>
                   Start a free Demo Pathway
                 </button>
-                <button className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-white bg-white/5 border border-white/15 hover:bg-white/10 transition-all">
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-white bg-white/5 border border-white/15 hover:bg-white/10 transition-all">
                   Continue to Dashboard
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                   </svg>
-                </button>
+                </Link>
               </div>
               {/* Trust badges */}
               <div className="flex flex-wrap gap-4">
@@ -411,12 +411,12 @@ export default function Hub() {
                       </div>
                     ))}
                   </div>
-                  <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white hub-brand-gradient hover:brightness-110 transition-all">
+                  <Link href="/dashboard" className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white hub-brand-gradient hover:brightness-110 transition-all">
                     Continue to Dashboard
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                     </svg>
-                  </button>
+                  </Link>
                 </>
               ) : (
                 <>
