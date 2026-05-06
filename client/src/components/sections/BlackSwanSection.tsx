@@ -2,11 +2,15 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { TrendingDown, AlignJustify, Activity, Shield } from "lucide-react";
 
 // ─── Black Swan scenario cards data ───────────────────────────────────────────
+// Theme palette: #4A90D9 (blue) → #7C5CBF (violet) → #9B59B6 (purple) → #D946A8 (pink)
 const SCENARIOS = [
   {
     icon: <TrendingDown size={20} />,
-    iconBg: "bg-[#1A2E2A]",
-    iconColor: "text-[#22D3EE]",
+    iconBg: "bg-[#4A90D9]/10",
+    iconBorder: "border-[#4A90D9]/20",
+    iconColor: "text-[#4A90D9]",
+    accentColor: "#4A90D9",
+    hoverBorder: "hover:border-[#4A90D9]/25",
     title: "Market Crashes",
     subtitle: "Flash crashes & sudden corrections",
     body: (
@@ -20,11 +24,15 @@ const SCENARIOS = [
       </>
     ),
     badge: { label: "3–5×", desc: "More assets accumulated vs bull markets" },
+    badgeText: "text-[#4A90D9]",
   },
   {
     icon: <AlignJustify size={20} />,
-    iconBg: "bg-[#1A2A2E]",
-    iconColor: "text-[#22D3EE]",
+    iconBg: "bg-[#7C5CBF]/10",
+    iconBorder: "border-[#7C5CBF]/20",
+    iconColor: "text-[#7C5CBF]",
+    accentColor: "#7C5CBF",
+    hoverBorder: "hover:border-[#7C5CBF]/25",
     title: "Recessions",
     subtitle: "Prolonged economic downturns",
     body: (
@@ -36,11 +44,15 @@ const SCENARIOS = [
       </>
     ),
     badge: { label: "aCONSISTENCY", desc: "Turtle Effect Quantifier" },
+    badgeText: "text-[#7C5CBF]",
   },
   {
     icon: <TrendingDown size={20} className="scale-x-[-1]" />,
-    iconBg: "bg-[#1A2E2A]",
-    iconColor: "text-[#22D3EE]",
+    iconBg: "bg-[#9B59B6]/10",
+    iconBorder: "border-[#9B59B6]/20",
+    iconColor: "text-[#9B59B6]",
+    accentColor: "#9B59B6",
+    hoverBorder: "hover:border-[#9B59B6]/25",
     title: "Depressions",
     subtitle: "Severe & sustained decline",
     body: (
@@ -52,11 +64,15 @@ const SCENARIOS = [
       </>
     ),
     badge: { label: "SEI", desc: "Snowball Effect compounds growth" },
+    badgeText: "text-[#9B59B6]",
   },
   {
     icon: <Activity size={20} />,
-    iconBg: "bg-[#1A2A2E]",
-    iconColor: "text-[#22D3EE]",
+    iconBg: "bg-[#D946A8]/10",
+    iconBorder: "border-[#D946A8]/20",
+    iconColor: "text-[#D946A8]",
+    accentColor: "#D946A8",
+    hoverBorder: "hover:border-[#D946A8]/25",
     title: "Stagflation",
     subtitle: "High inflation + stagnant growth",
     body: (
@@ -68,28 +84,30 @@ const SCENARIOS = [
       </>
     ),
     badge: { label: "aVOLATILITY", desc: "Identifies opportunity in any condition" },
+    badgeText: "text-[#D946A8]",
   },
 ];
 
 export function BlackSwanSection() {
   return (
     <section id="blackswan" className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Background glows */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#22D3EE]/4 rounded-full blur-[220px] pointer-events-none" />
+      {/* Background glows — using page theme colors */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#7C5CBF]/5 rounded-full blur-[220px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#4A90D9]/5 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-[#D946A8]/3 rounded-full blur-[180px] pointer-events-none" />
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* ── Section Header ── */}
         <AnimatedSection>
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-semibold tracking-wider uppercase text-[#22D3EE] bg-[#22D3EE]/10 rounded-full mb-5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22D3EE] animate-pulse" />
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-semibold tracking-wider uppercase text-[#9B59B6] bg-[#9B59B6]/10 rounded-full mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#9B59B6] animate-pulse" />
               Black Swan Resilience
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 leading-tight">
               Built to withstand the{" "}
-              <em className="not-italic text-[#22D3EE]">unthinkable</em>.
+              <em className="not-italic gradient-text">unthinkable</em>.
             </h2>
             <p className="text-white/50 text-base sm:text-lg leading-relaxed">
               While traditional strategies collapse during extreme market events, AAM transforms chaos into
@@ -102,12 +120,12 @@ export function BlackSwanSection() {
         <AnimatedSection delay={0.1}>
           <div className="max-w-4xl mx-auto mb-14 relative">
             {/* Large decorative quotes */}
-            <div className="absolute -top-4 left-6 text-[#22D3EE]/30 text-6xl font-serif leading-none select-none">"</div>
-            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#0D1F1C]/80 via-[#0B1520]/80 to-[#0D1F1C]/80 px-10 py-8 text-center backdrop-blur-sm">
+            <div className="absolute -top-4 left-6 text-[#7C5CBF]/40 text-6xl font-serif leading-none select-none">"</div>
+            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#4A90D9]/5 via-[#0B1520]/80 to-[#D946A8]/5 px-10 py-8 text-center backdrop-blur-sm">
               <p className="text-white/85 text-xl sm:text-2xl italic font-light leading-relaxed">
                 We don't just trade to make money — we trade to accumulate more assets.
               </p>
-              <p className="mt-4 text-xs font-bold tracking-widest text-[#22D3EE]/60 uppercase">
+              <p className="mt-4 text-xs font-bold tracking-widest text-[#9B59B6]/70 uppercase">
                 — The AAM Philosophy
               </p>
             </div>
@@ -118,9 +136,12 @@ export function BlackSwanSection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
           {SCENARIOS.map((s, i) => (
             <AnimatedSection key={s.title} delay={0.15 + i * 0.08}>
-              <div className="h-full rounded-2xl border border-white/8 bg-gradient-to-b from-[#0D1A1F]/90 to-[#091318]/90 p-6 flex flex-col backdrop-blur-sm hover:border-[#22D3EE]/20 transition-colors duration-300">
+              <div
+                className={`h-full rounded-2xl border border-white/8 bg-gradient-to-b from-[#0D1020]/90 to-[#090E18]/90 p-6 flex flex-col backdrop-blur-sm ${s.hoverBorder} transition-colors duration-300`}
+                style={{ boxShadow: `0 0 30px ${s.accentColor}10` }}
+              >
                 {/* Icon */}
-                <div className={`w-10 h-10 rounded-xl ${s.iconBg} border border-white/8 flex items-center justify-center mb-4 ${s.iconColor}`}>
+                <div className={`w-10 h-10 rounded-xl ${s.iconBg} border ${s.iconBorder} flex items-center justify-center mb-4 ${s.iconColor}`}>
                   {s.icon}
                 </div>
 
@@ -133,9 +154,15 @@ export function BlackSwanSection() {
 
                 {/* Badge */}
                 <div className="mt-5 flex items-center gap-2 bg-white/[0.04] border border-white/8 rounded-xl px-3 py-2">
-                  <span className="text-xs font-bold text-[#22D3EE] whitespace-nowrap">{s.badge.label}</span>
+                  <span className={`text-xs font-bold whitespace-nowrap ${s.badgeText}`}>{s.badge.label}</span>
                   <span className="text-[11px] text-white/35 leading-tight">{s.badge.desc}</span>
                 </div>
+
+                {/* Bottom accent line on hover */}
+                <div
+                  className="mt-3 h-0.5 rounded-full opacity-30"
+                  style={{ background: `linear-gradient(90deg, transparent, ${s.accentColor}, transparent)` }}
+                />
               </div>
             </AnimatedSection>
           ))}
@@ -143,9 +170,9 @@ export function BlackSwanSection() {
 
         {/* ── Counter-Intuitive Advantage strip ── */}
         <AnimatedSection delay={0.45}>
-          <div className="mt-10 rounded-2xl border border-[#22D3EE]/15 bg-gradient-to-r from-[#0D1F1C]/60 via-[#0B1520]/60 to-[#0D1F1C]/60 px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="w-10 h-10 rounded-xl bg-[#22D3EE]/10 flex items-center justify-center shrink-0">
-              <Shield size={20} className="text-[#22D3EE]" />
+          <div className="mt-10 rounded-2xl border border-white/10 bg-gradient-to-r from-[#4A90D9]/8 via-[#7C5CBF]/6 to-[#D946A8]/8 px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4A90D9]/20 to-[#9B59B6]/20 border border-white/10 flex items-center justify-center shrink-0">
+              <Shield size={20} className="text-[#9B59B6]" />
             </div>
             <div className="flex-1">
               <p className="text-sm font-bold text-white mb-1">The Counter-Intuitive Advantage: Bear Market Alpha</p>
@@ -163,7 +190,7 @@ export function BlackSwanSection() {
               <div className="w-px bg-white/10" />
               <div className="text-center">
                 <p className="text-xs text-white/35 uppercase tracking-wider mb-1">Bear Market AAR</p>
-                <p className="text-xl font-extrabold font-mono text-[#22D3EE]">1,236%</p>
+                <p className="text-xl font-extrabold font-mono gradient-text">1,236%</p>
                 <p className="text-[10px] text-white/25">Case Study 2B (12hr)</p>
               </div>
             </div>
