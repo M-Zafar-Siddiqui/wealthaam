@@ -1,6 +1,7 @@
 import { ASSETS, NAV_LINKS } from "@/lib/constants";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "wouter";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -46,6 +47,12 @@ export function Navbar() {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center gap-3">
+            <Link
+              href="/hub"
+              className="px-4 py-2.5 text-sm font-semibold text-white/80 rounded-lg border border-white/10 hover:border-white/25 hover:bg-white/5 transition-all"
+            >
+              Launch Hub
+            </Link>
             <a
               href="#subscription"
               className="px-5 py-2.5 text-sm font-semibold text-white rounded-lg gradient-bg hover:opacity-90 transition-opacity"
@@ -78,6 +85,13 @@ export function Navbar() {
                 {link.label}
               </a>
             ))}
+            <Link
+              href="/hub"
+              onClick={() => setIsMobileOpen(false)}
+              className="block px-4 py-3 mt-2 text-sm font-semibold text-white/80 text-center rounded-lg border border-white/10"
+            >
+              Launch Hub
+            </Link>
             <a
               href="#subscription"
               onClick={() => setIsMobileOpen(false)}

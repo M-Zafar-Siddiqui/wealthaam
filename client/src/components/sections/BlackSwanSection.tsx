@@ -137,8 +137,10 @@ export function BlackSwanSection() {
           {SCENARIOS.map((s, i) => (
             <AnimatedSection key={s.title} delay={0.15 + i * 0.08}>
               <div
-                className={`h-full rounded-2xl border border-white/8 bg-gradient-to-b from-[#0D1020]/90 to-[#090E18]/90 p-6 flex flex-col backdrop-blur-sm ${s.hoverBorder} transition-colors duration-300`}
+                className={`h-full rounded-2xl border border-white/8 bg-gradient-to-b from-[#0D1020]/90 to-[#090E18]/90 p-6 flex flex-col backdrop-blur-sm ${s.hoverBorder} transition-all duration-300 hover:-translate-y-1.5 group/card`}
                 style={{ boxShadow: `0 0 30px ${s.accentColor}10` }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 40px ${s.accentColor}30, 0 0 0 1px ${s.accentColor}20`; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 0 30px ${s.accentColor}10`; }}
               >
                 {/* Icon */}
                 <div className={`w-10 h-10 rounded-xl ${s.iconBg} border ${s.iconBorder} flex items-center justify-center mb-4 ${s.iconColor}`}>

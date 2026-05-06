@@ -1,6 +1,7 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "wouter";
 
 // ─── Animated counter hook ────────────────────────────────────────────────────
 function useCountUp(target: number, duration = 1800, decimals = 0, startOnVisible = true) {
@@ -126,13 +127,13 @@ export function HeroSection() {
           {/* CTA Buttons */}
           <AnimatedSection delay={0.3}>
             <div className="flex flex-wrap gap-4">
-              <a
-                href="#subscription"
+              <Link
+                href="/hub"
                 className="group inline-flex items-center gap-2 px-8 py-4 text-sm font-bold text-white rounded-xl gradient-bg hover:opacity-90 transition-all shadow-lg shadow-purple-500/20"
               >
                 Express Your Interest
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </a>
+              </Link>
               <a
                 href="#performance"
                 className="inline-flex items-center gap-2 px-8 py-4 text-sm font-semibold text-white/80 rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all"
