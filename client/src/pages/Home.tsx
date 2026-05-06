@@ -12,6 +12,7 @@ import { AnalyticsSection } from "@/components/sections/AnalyticsSection";
 import { PathwaysSection } from "@/components/sections/PathwaysSection";
 import { TokenSection } from "@/components/sections/TokenSection";
 import { SubscriptionSection } from "@/components/sections/SubscriptionSection";
+import FAQSection from "@/components/sections/FAQSection";
 
 export default function Home() {
   return (
@@ -29,6 +30,7 @@ export default function Home() {
       <PathwaysSection />
       <TokenSection />
       <SubscriptionSection />
+      <FAQSection />
       <Footer />
     </div>
   );

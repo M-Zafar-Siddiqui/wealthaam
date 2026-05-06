@@ -209,6 +209,113 @@ function MetricCard({ label, value, sub, prefix, accent }: {
   );
 }
 
+// ─── eCOST Decay Chart ───────────────────────────────────────────────────────
+const ECOST_DATA = [
+  { month: "Jan", eCost: 2.84, price: 2.84, qty: 1.00 },
+  { month: "Feb", eCost: 2.61, price: 2.95, qty: 1.18 },
+  { month: "Mar", eCost: 2.38, price: 2.71, qty: 1.37 },
+  { month: "Apr", eCost: 2.12, price: 3.10, qty: 1.62 },
+  { month: "May", eCost: 1.94, price: 3.24, qty: 1.84 },
+  { month: "Jun", eCost: 1.71, price: 2.88, qty: 2.14 },
+  { month: "Jul", eCost: 1.52, price: 3.45, qty: 2.48 },
+  { month: "Aug", eCost: 1.34, price: 3.62, qty: 2.87 },
+  { month: "Sep", eCost: 1.18, price: 3.31, qty: 3.22 },
+  { month: "Oct", eCost: 1.03, price: 3.78, qty: 3.74 },
+  { month: "Nov", eCost: 0.89, price: 4.12, qty: 4.31 },
+  { month: "Dec", eCost: 0.76, price: 4.28, qty: 5.01 },
+];
+
+function ECostChart() {
+  const [hovered, setHovered] = useState<number | null>(null);
+  const W = 560; const H = 180; const PAD = { t: 16, r: 16, b: 32, l: 44 };
+  const innerW = W - PAD.l - PAD.r;
+  const innerH = H - PAD.t - PAD.b;
+  const n = ECOST_DATA.length;
+  const maxPrice = Math.max(...ECOST_DATA.map(d => d.price));
+  const maxEcost = Math.max(...ECOST_DATA.map(d => d.eCost));
+  const yMax = Math.max(maxPrice, maxEcost) * 1.1;
+  const xStep = innerW / (n - 1);
+  const yScale = (v: number) => innerH - (v / yMax) * innerH;
+  const eCostPath = ECOST_DATA.map((d, i) => `${i === 0 ? "M" : "L"}${PAD.l + i * xStep},${PAD.t + yScale(d.eCost)}`).join(" ");
+  const pricePath = ECOST_DATA.map((d, i) => `${i === 0 ? "M" : "L"}${PAD.l + i * xStep},${PAD.t + yScale(d.price)}`).join(" ");
+  const eCostArea = eCostPath + ` L${PAD.l + (n-1)*xStep},${PAD.t + innerH} L${PAD.l},${PAD.t + innerH} Z`;
+
+  return (
+    <div style={{ background: "#0d1f2d", border: "1px solid #1a3044", borderRadius: 10, padding: "16px 18px", marginBottom: 20, fontFamily: "Arial, sans-serif" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+        <div>
+          <div style={{ fontFamily: "Helvetica, Arial, sans-serif", fontWeight: 700, fontSize: 14, color: "#e2e8f0" }}>
+            <MetricPrefix prefix="e" name="COST" /> Decay Chart
+          </div>
+          <div style={{ fontSize: 11, color: "#4a5568", marginTop: 2 }}>Effective cost per unit declining as AAM accumulates more assets · Initial Investment ÷ Current Quantity</div>
+        </div>
+        <div style={{ display: "flex", gap: 16, fontSize: 10, color: "#4a5568", alignItems: "center" }}>
+          <span><span style={{ display: "inline-block", width: 20, height: 2, background: "#F87171", verticalAlign: "middle", marginRight: 4 }} />eCOST</span>
+          <span><span style={{ display: "inline-block", width: 20, height: 2, background: "#4A90D9", verticalAlign: "middle", marginRight: 4, borderTop: "2px dashed #4A90D9" }} />Market Price</span>
+        </div>
+      </div>
+      <div style={{ overflowX: "auto" }}>
+        <svg width={W} height={H} style={{ display: "block", maxWidth: "100%" }}
+          onMouseLeave={() => setHovered(null)}>
+          <defs>
+            <linearGradient id="ecostGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#F87171" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#F87171" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {/* Y-axis gridlines */}
+          {[0.25, 0.5, 0.75, 1].map(f => (
+            <line key={f} x1={PAD.l} y1={PAD.t + innerH * (1-f)} x2={PAD.l + innerW} y2={PAD.t + innerH * (1-f)}
+              stroke="#1a3044" strokeWidth={1} />
+          ))}
+          {/* eCOST area fill */}
+          <path d={eCostArea} fill="url(#ecostGrad)" />
+          {/* Price line (dashed) */}
+          <path d={pricePath} fill="none" stroke="#4A90D9" strokeWidth={1.5} strokeDasharray="4 3" opacity={0.7} />
+          {/* eCOST line */}
+          <path d={eCostPath} fill="none" stroke="#F87171" strokeWidth={2} />
+          {/* Data points + hover */}
+          {ECOST_DATA.map((d, i) => {
+            const cx = PAD.l + i * xStep;
+            const cy = PAD.t + yScale(d.eCost);
+            const py = PAD.t + yScale(d.price);
+            return (
+              <g key={i} onMouseEnter={() => setHovered(i)} style={{ cursor: "pointer" }}>
+                <rect x={cx - xStep/2} y={PAD.t} width={xStep} height={innerH} fill="transparent" />
+                <circle cx={cx} cy={cy} r={hovered === i ? 5 : 3} fill="#F87171" stroke="#07111d" strokeWidth={1.5} />
+                <circle cx={cx} cy={py} r={hovered === i ? 4 : 2} fill="#4A90D9" stroke="#07111d" strokeWidth={1} opacity={0.8} />
+                {hovered === i && (
+                  <g>
+                    <rect x={cx - 52} y={PAD.t - 2} width={104} height={52} rx={4} fill="#0d1f2d" stroke="#1a3044" strokeWidth={1} />
+                    <text x={cx} y={PAD.t + 12} textAnchor="middle" fill="#8899aa" fontSize={9} fontFamily="Arial">{d.month}</text>
+                    <text x={cx} y={PAD.t + 25} textAnchor="middle" fill="#F87171" fontSize={10} fontFamily="Arial" fontWeight="700">eCOST ${d.eCost.toFixed(2)}</text>
+                    <text x={cx} y={PAD.t + 38} textAnchor="middle" fill="#4A90D9" fontSize={10} fontFamily="Arial">Price ${d.price.toFixed(2)}</text>
+                    <text x={cx} y={PAD.t + 50} textAnchor="middle" fill="#22c55e" fontSize={9} fontFamily="Arial">{d.qty.toFixed(2)}× qty</text>
+                  </g>
+                )}
+                {/* X-axis labels */}
+                <text x={cx} y={H - 6} textAnchor="middle" fill="#4a5568" fontSize={9} fontFamily="Arial">{d.month}</text>
+              </g>
+            );
+          })}
+          {/* Y-axis labels */}
+          {[0, 1, 2, 3, 4].map(v => (
+            <text key={v} x={PAD.l - 6} y={PAD.t + yScale(v) + 4} textAnchor="end" fill="#4a5568" fontSize={9} fontFamily="Arial">${v}</text>
+          ))}
+        </svg>
+      </div>
+      {/* Summary row */}
+      <div style={{ display: "flex", gap: 20, marginTop: 10, paddingTop: 10, borderTop: "1px solid #1a3044" }}>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Initial eCOST</div><div style={{ fontSize: 14, fontWeight: 700, color: "#F87171", fontFamily: "Helvetica, Arial, sans-serif" }}>$2.84</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Current eCOST</div><div style={{ fontSize: 14, fontWeight: 700, color: "#22c55e", fontFamily: "Helvetica, Arial, sans-serif" }}>$0.76</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Reduction</div><div style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", fontFamily: "Helvetica, Arial, sans-serif" }}>−73.2%</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Qty Accumulated</div><div style={{ fontSize: 14, fontWeight: 700, color: "#4A90D9", fontFamily: "Helvetica, Arial, sans-serif" }}>5.01×</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>vs Market Price</div><div style={{ fontSize: 14, fontWeight: 700, color: "#A78BFA", fontFamily: "Helvetica, Arial, sans-serif" }}>−82.2% below</div></div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Overview Section ─────────────────────────────────────────────────────────
 function OverviewSection() {
   const totalValue = HOLDINGS.reduce((s, h) => s + h.valueUsd, 0);
@@ -226,6 +333,9 @@ function OverviewSection() {
         <MetricCard label="COST basis" value={`$${totalCapital.toLocaleString()}`} sub="deployed capital" prefix="e" />
         <MetricCard label="COMPOSITE" value={`+${pnlPct}%`} sub="total return" prefix="x" />
       </div>
+
+      {/* eCOST Decay Chart */}
+      <ECostChart />
 
       {/* Pathway Cards */}
       <div style={{ marginBottom: 20 }}>
