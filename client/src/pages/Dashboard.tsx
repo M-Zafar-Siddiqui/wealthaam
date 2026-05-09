@@ -721,11 +721,77 @@ function OverviewSection() {
             </div>
           ))}
         </div>
+       </div>
+
+      {/* Fastest to 50% eCOST Leaderboard */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <div>
+            <div style={{ fontFamily: "Helvetica, Arial, sans-serif", fontWeight: 700, fontSize: 14, color: "#e2e8f0" }}>
+              🏆 Fastest to 50% eCOST Reduction
+            </div>
+            <div style={{ fontSize: 10, color: "#4a5568", marginTop: 2 }}>Top 5 strategies (HIGH TIMEFRAME: 6h/8h/12h) that achieved 50% eCOST reduction fastest</div>
+          </div>
+          <span style={{ fontSize: 9, padding: "3px 8px", borderRadius: 8, background: "rgba(74,144,217,0.12)", color: "#4A90D9", border: "1px solid rgba(74,144,217,0.25)", fontWeight: 700 }}>HIGH TIMEFRAME</span>
+        </div>
+        <div style={{ background: "#0d1f2d", border: "1px solid #1a3044", borderRadius: 10, overflow: "hidden" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "Arial, sans-serif", fontSize: 12 }}>
+            <thead>
+              <tr style={{ borderBottom: "1px solid #1a3044" }}>
+                {["Rank", "Strategy", "Asset", "TF", "Months to 50%", "aRATE%", "qMULTIPLE", "Win Rate", "Action"].map(h => (
+                  <th key={h} style={{ padding: "9px 12px", textAlign: h === "Rank" || h === "Strategy" || h === "Asset" || h === "Action" ? "left" : "right", color: "#4a5568", fontWeight: 600, fontSize: 9, letterSpacing: "0.06em", textTransform: "uppercase" }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { rank: 1, id: "720012", name: "SOL-6h-EMC",  asset: "SOL",  tf: "6h",  months: 4,  aRate: 31.0, qMult: 4.20, winRate: 63.4, medal: "🥇" },
+                { rank: 2, id: "720003", name: "ETH-12h-EMC", asset: "ETH",  tf: "12h", months: 6,  aRate: 22.4, qMult: 3.12, winRate: 67.8, medal: "🥈" },
+                { rank: 3, id: "720007", name: "BTC-8h-EMC",  asset: "BTC",  tf: "8h",  months: 7,  aRate: 18.1, qMult: 2.58, winRate: 71.2, medal: "🥉" },
+                { rank: 4, id: "720021", name: "ADA-6h-EMC",  asset: "ADA",  tf: "6h",  months: 9,  aRate: 28.0, qMult: 3.85, winRate: 61.0, medal: "4" },
+                { rank: 5, id: "720018", name: "LINK-12h-EMC",asset: "LINK", tf: "12h", months: 11, aRate: 25.0, qMult: 3.40, winRate: 65.5, medal: "5" },
+              ].map((row, i) => (
+                <tr key={row.id} style={{ borderBottom: "1px solid #0d1f2d", background: i === 0 ? "rgba(45,212,191,0.04)" : "transparent" }}>
+                  <td style={{ padding: "10px 12px" }}>
+                    <span style={{ fontSize: i < 3 ? 16 : 11, fontWeight: 700, color: i === 0 ? "#2dd4bf" : i === 1 ? "#a78bfa" : i === 2 ? "#F59E0B" : "#4a5568" }}>
+                      {row.medal}
+                    </span>
+                  </td>
+                  <td style={{ padding: "10px 12px" }}>
+                    <div style={{ fontWeight: 600, color: "#e2e8f0", fontSize: 11 }}>{row.name}</div>
+                    <div style={{ fontSize: 9, color: "#4a5568" }}>#{row.id}</div>
+                  </td>
+                  <td style={{ padding: "10px 12px" }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 6, background: "rgba(74,144,217,0.12)", color: "#4A90D9" }}>{row.asset}</span>
+                  </td>
+                  <td style={{ padding: "10px 12px", textAlign: "right" }}>
+                    <span style={{ fontSize: 9, padding: "2px 7px", borderRadius: 6, background: "rgba(34,197,94,0.1)", color: "#22c55e", fontWeight: 700 }}>{row.tf}</span>
+                  </td>
+                  <td style={{ padding: "10px 12px", textAlign: "right" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 6 }}>
+                      <div style={{ width: 60, height: 6, borderRadius: 3, background: "#1a3044", overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${Math.max(10, 100 - row.months * 7)}%`, background: i === 0 ? "#2dd4bf" : i === 1 ? "#a78bfa" : i === 2 ? "#F59E0B" : "#4a5568", borderRadius: 3 }} />
+                      </div>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: i === 0 ? "#2dd4bf" : "#e2e8f0" }}>{row.months}mo</span>
+                    </div>
+                  </td>
+                  <td style={{ padding: "10px 12px", textAlign: "right", color: "#22c55e", fontWeight: 600 }}>{row.aRate.toFixed(1)}%</td>
+                  <td style={{ padding: "10px 12px", textAlign: "right", color: "#a78bfa", fontWeight: 600 }}>{row.qMult.toFixed(2)}×</td>
+                  <td style={{ padding: "10px 12px", textAlign: "right", color: "#4a5568" }}>{row.winRate.toFixed(1)}%</td>
+                  <td style={{ padding: "10px 12px" }}>
+                    <a href={`/strategy/${row.id}`} style={{ textDecoration: "none" }}>
+                      <button style={{ fontSize: 9, padding: "4px 10px", borderRadius: 5, border: "1px solid #1a3044", background: "transparent", color: "#4A90D9", cursor: "pointer", fontFamily: "Arial, sans-serif" }}>View →</button>
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
 }
-
 // ─── Holdings Section ─────────────────────────────────────────────────────────
 function HoldingsSection() {
   const total = HOLDINGS.reduce((s, h) => s + h.valueUsd, 0);

@@ -23,6 +23,7 @@ export const NAV_LINKS = [
   { label: "Pathways", href: "#pathways" },
   { label: "$AACCUMA", href: "#token" },
   { label: "Pricing", href: "#subscription" },
+  { label: "❄ Snowball", href: "/snowball" },
 ] as const;
 
 export const FEATURES = [
