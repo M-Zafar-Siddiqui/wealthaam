@@ -210,85 +210,177 @@ function MetricCard({ label, value, sub, prefix, accent }: {
 }
 
 // ─── eCOST Decay Chart ───────────────────────────────────────────────────────
-const ECOST_DATA = [
-  { month: "Jan", eCost: 2.84, price: 2.84, qty: 1.00 },
-  { month: "Feb", eCost: 2.61, price: 2.95, qty: 1.18 },
-  { month: "Mar", eCost: 2.38, price: 2.71, qty: 1.37 },
-  { month: "Apr", eCost: 2.12, price: 3.10, qty: 1.62 },
-  { month: "May", eCost: 1.94, price: 3.24, qty: 1.84 },
-  { month: "Jun", eCost: 1.71, price: 2.88, qty: 2.14 },
-  { month: "Jul", eCost: 1.52, price: 3.45, qty: 2.48 },
-  { month: "Aug", eCost: 1.34, price: 3.62, qty: 2.87 },
-  { month: "Sep", eCost: 1.18, price: 3.31, qty: 3.22 },
-  { month: "Oct", eCost: 1.03, price: 3.78, qty: 3.74 },
-  { month: "Nov", eCost: 0.89, price: 4.12, qty: 4.31 },
-  { month: "Dec", eCost: 0.76, price: 4.28, qty: 5.01 },
+// Full 12-month dataset with individual trade events
+type EcostPoint = {
+  month: string; week?: string; eCost: number; price: number; qty: number;
+  trades?: number; tradeType?: "buy" | "rebalance" | "compound";
+};
+
+// 3-month window: weekly granularity with individual trade events
+const ECOST_3M: EcostPoint[] = [
+  { month: "Oct W1", eCost: 1.03, price: 3.78, qty: 3.74, trades: 3, tradeType: "buy" },
+  { month: "Oct W2", eCost: 0.99, price: 3.85, qty: 3.91, trades: 2, tradeType: "buy" },
+  { month: "Oct W3", eCost: 0.96, price: 3.72, qty: 4.02, trades: 4, tradeType: "compound" },
+  { month: "Oct W4", eCost: 0.93, price: 3.91, qty: 4.15, trades: 2, tradeType: "buy" },
+  { month: "Nov W1", eCost: 0.91, price: 4.05, qty: 4.22, trades: 3, tradeType: "buy" },
+  { month: "Nov W2", eCost: 0.89, price: 4.12, qty: 4.31, trades: 2, tradeType: "rebalance" },
+  { month: "Nov W3", eCost: 0.87, price: 4.08, qty: 4.40, trades: 3, tradeType: "buy" },
+  { month: "Nov W4", eCost: 0.84, price: 4.19, qty: 4.52, trades: 4, tradeType: "compound" },
+  { month: "Dec W1", eCost: 0.82, price: 4.22, qty: 4.63, trades: 2, tradeType: "buy" },
+  { month: "Dec W2", eCost: 0.80, price: 4.25, qty: 4.74, trades: 3, tradeType: "buy" },
+  { month: "Dec W3", eCost: 0.78, price: 4.27, qty: 4.88, trades: 2, tradeType: "rebalance" },
+  { month: "Dec W4", eCost: 0.76, price: 4.28, qty: 5.01, trades: 4, tradeType: "compound" },
 ];
 
-// Tooltip data derived from ECOST_DATA
-function getTooltipData(i: number) {
-  const d = ECOST_DATA[i];
-  const initial = ECOST_DATA[0];
+// 6-month window: bi-weekly with trade events
+const ECOST_6M: EcostPoint[] = [
+  { month: "Jul", eCost: 1.52, price: 3.45, qty: 2.48, trades: 6, tradeType: "buy" },
+  { month: "Jul+", eCost: 1.44, price: 3.52, qty: 2.64, trades: 5, tradeType: "compound" },
+  { month: "Aug", eCost: 1.34, price: 3.62, qty: 2.87, trades: 7, tradeType: "buy" },
+  { month: "Aug+", eCost: 1.27, price: 3.55, qty: 3.02, trades: 4, tradeType: "rebalance" },
+  { month: "Sep", eCost: 1.18, price: 3.31, qty: 3.22, trades: 6, tradeType: "buy" },
+  { month: "Sep+", eCost: 1.12, price: 3.48, qty: 3.44, trades: 5, tradeType: "compound" },
+  { month: "Oct", eCost: 1.03, price: 3.78, qty: 3.74, trades: 8, tradeType: "buy" },
+  { month: "Oct+", eCost: 0.96, price: 3.88, qty: 4.02, trades: 5, tradeType: "buy" },
+  { month: "Nov", eCost: 0.89, price: 4.12, qty: 4.31, trades: 7, tradeType: "compound" },
+  { month: "Nov+", eCost: 0.84, price: 4.18, qty: 4.55, trades: 4, tradeType: "rebalance" },
+  { month: "Dec", eCost: 0.79, price: 4.26, qty: 4.82, trades: 6, tradeType: "buy" },
+  { month: "Dec+", eCost: 0.76, price: 4.28, qty: 5.01, trades: 5, tradeType: "compound" },
+];
+
+// 1-year window: monthly
+const ECOST_1Y: EcostPoint[] = [
+  { month: "Jan", eCost: 2.84, price: 2.84, qty: 1.00, trades: 4, tradeType: "buy" },
+  { month: "Feb", eCost: 2.61, price: 2.95, qty: 1.18, trades: 5, tradeType: "buy" },
+  { month: "Mar", eCost: 2.38, price: 2.71, qty: 1.37, trades: 6, tradeType: "compound" },
+  { month: "Apr", eCost: 2.12, price: 3.10, qty: 1.62, trades: 7, tradeType: "buy" },
+  { month: "May", eCost: 1.94, price: 3.24, qty: 1.84, trades: 5, tradeType: "rebalance" },
+  { month: "Jun", eCost: 1.71, price: 2.88, qty: 2.14, trades: 8, tradeType: "buy" },
+  { month: "Jul", eCost: 1.52, price: 3.45, qty: 2.48, trades: 6, tradeType: "compound" },
+  { month: "Aug", eCost: 1.34, price: 3.62, qty: 2.87, trades: 7, tradeType: "buy" },
+  { month: "Sep", eCost: 1.18, price: 3.31, qty: 3.22, trades: 6, tradeType: "buy" },
+  { month: "Oct", eCost: 1.03, price: 3.78, qty: 3.74, trades: 8, tradeType: "compound" },
+  { month: "Nov", eCost: 0.89, price: 4.12, qty: 4.31, trades: 7, tradeType: "rebalance" },
+  { month: "Dec", eCost: 0.76, price: 4.28, qty: 5.01, trades: 9, tradeType: "compound" },
+];
+
+const ECOST_WINDOWS = { "3M": ECOST_3M, "6M": ECOST_6M, "1Y": ECOST_1Y } as const;
+type EcostWindow = keyof typeof ECOST_WINDOWS;
+
+const TRADE_COLORS: Record<string, string> = {
+  buy: "#4A90D9",
+  rebalance: "#F59E0B",
+  compound: "#22c55e",
+};
+
+// Tooltip data derived from a dataset slice
+function getTooltipData(d: EcostPoint, initial: EcostPoint) {
   const reductionPct = (((initial.eCost - d.eCost) / initial.eCost) * 100).toFixed(1);
   const gapPct = (((d.price - d.eCost) / d.price) * 100).toFixed(1);
-  const qtyGain = ((d.qty - 1) * 100).toFixed(0);
+  const qtyGain = ((d.qty / initial.qty - 1) * 100).toFixed(0);
   return { ...d, reductionPct, gapPct, qtyGain };
 }
 
 function ECostChart() {
+  const [window, setWindow] = useState<EcostWindow>("1Y");
   const [hovered, setHovered] = useState<number | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const W = 560; const H = 200; const PAD = { t: 16, r: 16, b: 32, l: 44 };
+  const DATA = ECOST_WINDOWS[window];
+  const W = 560; const H = 210; const PAD = { t: 20, r: 16, b: 32, l: 44 };
   const innerW = W - PAD.l - PAD.r;
   const innerH = H - PAD.t - PAD.b;
-  const n = ECOST_DATA.length;
-  const maxPrice = Math.max(...ECOST_DATA.map(d => d.price));
-  const maxEcost = Math.max(...ECOST_DATA.map(d => d.eCost));
-  const yMax = Math.max(maxPrice, maxEcost) * 1.1;
+  const n = DATA.length;
+  const maxPrice = Math.max(...DATA.map(d => d.price));
+  const yMax = Math.max(maxPrice, DATA[0].eCost) * 1.12;
   const xStep = innerW / (n - 1);
   const yScale = (v: number) => innerH - (v / yMax) * innerH;
-  const eCostPath = ECOST_DATA.map((d, i) => `${i === 0 ? "M" : "L"}${PAD.l + i * xStep},${PAD.t + yScale(d.eCost)}`).join(" ");
-  const pricePath = ECOST_DATA.map((d, i) => `${i === 0 ? "M" : "L"}${PAD.l + i * xStep},${PAD.t + yScale(d.price)}`).join(" ");
+
+  // Smooth eCOST curve path
+  const eCostPath = DATA.map((d, i) => `${i === 0 ? "M" : "L"}${PAD.l + i * xStep},${PAD.t + yScale(d.eCost)}`).join(" ");
+  const pricePath = DATA.map((d, i) => `${i === 0 ? "M" : "L"}${PAD.l + i * xStep},${PAD.t + yScale(d.price)}`).join(" ");
   const eCostArea = eCostPath + ` L${PAD.l + (n-1)*xStep},${PAD.t + innerH} L${PAD.l},${PAD.t + innerH} Z`;
+
+  // Stepped qty path (staircase — reflects incremental trade accumulation)
+  const qtyMax = Math.max(...DATA.map(d => d.qty)) * 1.1;
+  const qtyScale = (v: number) => innerH - (v / qtyMax) * innerH;
+  const qtyStepPath = DATA.map((d, i) => {
+    const cx = PAD.l + i * xStep;
+    const cy = PAD.t + qtyScale(d.qty);
+    if (i === 0) return `M${cx},${cy}`;
+    const prevCx = PAD.l + (i - 1) * xStep;
+    return `L${cx},${PAD.t + qtyScale(DATA[i-1].qty)} L${cx},${cy}`;
+  }).join(" ");
 
   const handleMouseEnter = useCallback((i: number, svgX: number, svgY: number) => {
     setHovered(i);
-    // Convert SVG coords to container-relative coords
     if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      // svgX/svgY are SVG units; the SVG scales to maxWidth:100%
       const svgEl = containerRef.current.querySelector("svg");
       if (svgEl) {
         const svgRect = svgEl.getBoundingClientRect();
         const scaleX = svgRect.width / W;
-        const px = svgX * scaleX;
-        const py = svgY * (svgRect.height / H);
-        setTooltipPos({ x: px, y: py });
+        setTooltipPos({ x: svgX * scaleX, y: svgY * (svgRect.height / H) });
       }
     }
   }, [W, H]);
 
-  const tooltipData = hovered !== null ? getTooltipData(hovered) : null;
+  const tooltipData = hovered !== null ? getTooltipData(DATA[hovered], DATA[0]) : null;
+
+  // Summary stats from current window
+  const first = DATA[0]; const last = DATA[DATA.length - 1];
+  const reductionPct = (((first.eCost - last.eCost) / first.eCost) * 100).toFixed(1);
+  const gapBelowMarket = (((last.price - last.eCost) / last.price) * 100).toFixed(1);
+  const totalTrades = DATA.reduce((s, d) => s + (d.trades ?? 0), 0);
 
   return (
     <div
       ref={containerRef}
       style={{ background: "#0d1f2d", border: "1px solid #1a3044", borderRadius: 10, padding: "16px 18px", marginBottom: 20, fontFamily: "Arial, sans-serif", position: "relative" }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+      {/* Header row */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
         <div>
           <div style={{ fontFamily: "Helvetica, Arial, sans-serif", fontWeight: 700, fontSize: 14, color: "#e2e8f0" }}>
             <MetricPrefix prefix="e" name="COST" /> Decay Chart
           </div>
           <div style={{ fontSize: 11, color: "#4a5568", marginTop: 2 }}>Effective cost per unit declining as AAM accumulates more assets · Initial Investment ÷ Current Quantity</div>
         </div>
-        <div style={{ display: "flex", gap: 16, fontSize: 10, color: "#4a5568", alignItems: "center" }}>
-          <span><span style={{ display: "inline-block", width: 20, height: 2, background: "#F87171", verticalAlign: "middle", marginRight: 4 }} />eCOST</span>
-          <span><span style={{ display: "inline-block", width: 20, height: 2, background: "#4A90D9", verticalAlign: "middle", marginRight: 4, borderTop: "2px dashed #4A90D9" }} />Market Price</span>
-          <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#22c55e", borderRadius: "50%", verticalAlign: "middle", marginRight: 4 }} />Qty ×</span>
+        {/* Timeframe selector */}
+        <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+          {(["3M", "6M", "1Y"] as EcostWindow[]).map(w => (
+            <button
+              key={w}
+              onClick={() => { setWindow(w); setHovered(null); }}
+              style={{
+                padding: "3px 10px",
+                fontSize: 10,
+                fontWeight: 600,
+                fontFamily: "Helvetica, Arial, sans-serif",
+                borderRadius: 5,
+                border: window === w ? "1px solid #F87171" : "1px solid #1a3044",
+                background: window === w ? "rgba(248,113,113,0.12)" : "transparent",
+                color: window === w ? "#F87171" : "#4a5568",
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+            >{w}</button>
+          ))}
         </div>
+      </div>
+
+      {/* Legend */}
+      <div style={{ display: "flex", gap: 14, fontSize: 10, color: "#4a5568", alignItems: "center", marginBottom: 8, flexWrap: "wrap" }}>
+        <span><span style={{ display: "inline-block", width: 18, height: 2, background: "#F87171", verticalAlign: "middle", marginRight: 4 }} />eCOST</span>
+        <span><span style={{ display: "inline-block", width: 18, height: 2, background: "#4A90D9", borderTop: "2px dashed #4A90D9", verticalAlign: "middle", marginRight: 4 }} />Market Price</span>
+        <span><span style={{ display: "inline-block", width: 18, height: 2, background: "#22c55e", borderTop: "2px dotted #22c55e", verticalAlign: "middle", marginRight: 4 }} />Qty (stepped)</span>
+        <span style={{ marginLeft: 4 }}>Trade events:</span>
+        {Object.entries(TRADE_COLORS).map(([type, color]) => (
+          <span key={type}>
+            <span style={{ display: "inline-block", width: 7, height: 7, borderRadius: "50%", background: color, verticalAlign: "middle", marginRight: 3 }} />
+            {type}
+          </span>
+        ))}
       </div>
 
       {/* SVG Chart */}
@@ -301,155 +393,163 @@ function ECostChart() {
         >
           <defs>
             <linearGradient id="ecostGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#F87171" stopOpacity="0.22" />
+              <stop offset="0%" stopColor="#F87171" stopOpacity="0.20" />
               <stop offset="100%" stopColor="#F87171" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4A90D9" stopOpacity="0.10" />
-              <stop offset="100%" stopColor="#4A90D9" stopOpacity="0" />
             </linearGradient>
           </defs>
 
           {/* Y-axis gridlines + labels */}
           {[0, 1, 2, 3, 4].map(v => (
-            <g key={v}>
-              <line x1={PAD.l} y1={PAD.t + yScale(v)} x2={PAD.l + innerW} y2={PAD.t + yScale(v)}
-                stroke="#1a3044" strokeWidth={v === 0 ? 1.5 : 1} strokeDasharray={v === 0 ? "0" : "3 4"} />
-              <text x={PAD.l - 6} y={PAD.t + yScale(v) + 4} textAnchor="end" fill="#4a5568" fontSize={9} fontFamily="Arial">${v}</text>
-            </g>
+            v <= yMax ? (
+              <g key={v}>
+                <line x1={PAD.l} y1={PAD.t + yScale(v)} x2={PAD.l + innerW} y2={PAD.t + yScale(v)}
+                  stroke="#1a3044" strokeWidth={v === 0 ? 1.5 : 1} strokeDasharray={v === 0 ? "0" : "3 4"} />
+                <text x={PAD.l - 6} y={PAD.t + yScale(v) + 4} textAnchor="end" fill="#4a5568" fontSize={9} fontFamily="Arial">${v}</text>
+              </g>
+            ) : null
           ))}
 
           {/* eCOST area fill */}
           <path d={eCostArea} fill="url(#ecostGrad)" />
 
+          {/* Stepped qty line */}
+          <path d={qtyStepPath} fill="none" stroke="#22c55e" strokeWidth={1.2} strokeDasharray="2 3" opacity={0.55} />
+
           {/* Price line (dashed) */}
           <path d={pricePath} fill="none" stroke="#4A90D9" strokeWidth={1.5} strokeDasharray="4 3" opacity={0.7} />
 
-          {/* eCOST line */}
+          {/* eCOST smooth line */}
           <path d={eCostPath} fill="none" stroke="#F87171" strokeWidth={2} />
 
           {/* Vertical crosshair on hover */}
+          {hovered !== null && (
+            <line
+              x1={PAD.l + hovered * xStep} y1={PAD.t}
+              x2={PAD.l + hovered * xStep} y2={PAD.t + innerH}
+              stroke="rgba(255,255,255,0.10)" strokeWidth={1} strokeDasharray="3 3"
+            />
+          )}
+
+          {/* Gap indicator between eCOST and price on hover */}
           {hovered !== null && (() => {
             const cx = PAD.l + hovered * xStep;
+            const d = DATA[hovered];
             return (
               <line
-                x1={cx} y1={PAD.t}
-                x2={cx} y2={PAD.t + innerH}
-                stroke="rgba(255,255,255,0.12)"
-                strokeWidth={1}
-                strokeDasharray="3 3"
+                x1={cx} y1={PAD.t + yScale(d.eCost)}
+                x2={cx} y2={PAD.t + yScale(d.price)}
+                stroke="rgba(167,139,250,0.35)" strokeWidth={2} strokeDasharray="2 2"
               />
             );
           })()}
 
-          {/* Gap shading between eCOST and price on hovered column */}
-          {hovered !== null && (() => {
-            const cx = PAD.l + hovered * xStep;
-            const d = ECOST_DATA[hovered];
-            const cy = PAD.t + yScale(d.eCost);
-            const py = PAD.t + yScale(d.price);
-            return (
-              <line
-                x1={cx} y1={cy}
-                x2={cx} y2={py}
-                stroke="rgba(167,139,250,0.35)"
-                strokeWidth={2}
-                strokeDasharray="2 2"
-              />
-            );
-          })()}
-
-          {/* Data points */}
-          {ECOST_DATA.map((d, i) => {
+          {/* Data points + trade event markers */}
+          {DATA.map((d, i) => {
             const cx = PAD.l + i * xStep;
             const cy = PAD.t + yScale(d.eCost);
             const py = PAD.t + yScale(d.price);
+            const qy = PAD.t + qtyScale(d.qty);
             const isHov = hovered === i;
+            const tColor = TRADE_COLORS[d.tradeType ?? "buy"];
             return (
               <g
                 key={i}
                 onMouseEnter={() => handleMouseEnter(i, cx, Math.min(cy, py) - 10)}
                 style={{ cursor: "pointer" }}
               >
-                {/* Wide invisible hit area */}
+                {/* Hit area */}
                 <rect x={cx - xStep / 2} y={PAD.t} width={xStep} height={innerH} fill="transparent" />
 
-                {/* eCOST dot */}
-                <circle
-                  cx={cx} cy={cy}
-                  r={isHov ? 6 : 3.5}
+                {/* Trade event marker — small diamond on eCOST line, colored by trade type */}
+                <polygon
+                  points={`${cx},${cy - 5} ${cx + 4},${cy} ${cx},${cy + 5} ${cx - 4},${cy}`}
+                  fill={isHov ? tColor : "transparent"}
+                  stroke={tColor}
+                  strokeWidth={isHov ? 0 : 1}
+                  opacity={isHov ? 1 : 0.7}
+                />
+
+                {/* eCOST dot (on top of diamond) */}
+                <circle cx={cx} cy={cy} r={isHov ? 5.5 : 3}
                   fill={isHov ? "#FF6B6B" : "#F87171"}
-                  stroke={isHov ? "#fff" : "#07111d"}
-                  strokeWidth={isHov ? 1.5 : 1.5}
-                  style={{ transition: "r 0.15s ease" }}
+                  stroke={isHov ? "#fff" : "#07111d"} strokeWidth={1.5}
                 />
 
                 {/* Price dot */}
-                <circle
-                  cx={cx} cy={py}
-                  r={isHov ? 5 : 2.5}
+                <circle cx={cx} cy={py} r={isHov ? 4.5 : 2.5}
                   fill={isHov ? "#60a5fa" : "#4A90D9"}
-                  stroke={isHov ? "#fff" : "#07111d"}
-                  strokeWidth={isHov ? 1.5 : 1}
-                  opacity={0.9}
-                  style={{ transition: "r 0.15s ease" }}
+                  stroke={isHov ? "#fff" : "#07111d"} strokeWidth={1} opacity={0.9}
                 />
 
-                {/* Qty dot (small, green, on a secondary scale) */}
-                {(() => {
-                  const qtyY = PAD.t + innerH - ((d.qty / 6) * innerH);
-                  return (
-                    <circle
-                      cx={cx} cy={qtyY}
-                      r={isHov ? 4 : 2}
-                      fill="#22c55e"
-                      stroke="#07111d"
-                      strokeWidth={1}
-                      opacity={0.75}
-                      style={{ transition: "r 0.15s ease" }}
-                    />
-                  );
-                })()}
+                {/* Qty step dot */}
+                <circle cx={cx} cy={qy} r={isHov ? 3.5 : 2}
+                  fill="#22c55e" stroke="#07111d" strokeWidth={1} opacity={0.7}
+                />
+
+                {/* Trade count badge on hover */}
+                {isHov && d.trades !== undefined && (
+                  <g>
+                    <rect x={cx + 6} y={cy - 12} width={28} height={13} rx={3}
+                      fill={tColor} opacity={0.9} />
+                    <text x={cx + 20} y={cy - 3} textAnchor="middle" fill="#07111d" fontSize={8} fontFamily="Arial" fontWeight="700">{d.trades}T</text>
+                  </g>
+                )}
 
                 {/* X-axis label */}
-                <text x={cx} y={H - 6} textAnchor="middle" fill={isHov ? "#e2e8f0" : "#4a5568"} fontSize={9} fontFamily="Arial" fontWeight={isHov ? "700" : "400"}>{d.month}</text>
+                <text x={cx} y={H - 5} textAnchor="middle"
+                  fill={isHov ? "#e2e8f0" : "#4a5568"}
+                  fontSize={8} fontFamily="Arial"
+                  fontWeight={isHov ? "700" : "400"}>{d.month}</text>
               </g>
             );
           })}
         </svg>
       </div>
 
-      {/* HTML Tooltip — absolutely positioned over the chart container */}
+      {/* HTML Tooltip */}
       {tooltipData !== null && hovered !== null && (
         <div
           style={{
             position: "absolute",
-            left: Math.min(tooltipPos.x + 12, (containerRef.current?.offsetWidth ?? 400) - 200),
-            top: Math.max(tooltipPos.y - 20, 50),
-            width: 188,
+            left: Math.min(tooltipPos.x + 14, (containerRef.current?.offsetWidth ?? 400) - 210),
+            top: Math.max(tooltipPos.y - 10, 55),
+            width: 200,
             background: "#07111d",
             border: "1px solid #2a4060",
             borderRadius: 8,
             padding: "10px 12px",
             pointerEvents: "none",
             zIndex: 50,
-            boxShadow: "0 8px 24px rgba(0,0,0,0.55), 0 0 0 1px rgba(248,113,113,0.15)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.6), 0 0 0 1px rgba(248,113,113,0.12)",
             fontFamily: "Arial, sans-serif",
           }}
         >
           {/* Header */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, paddingBottom: 6, borderBottom: "1px solid #1a3044" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7, paddingBottom: 6, borderBottom: "1px solid #1a3044" }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: "#e2e8f0", fontFamily: "Helvetica, Arial, sans-serif" }}>{tooltipData.month} 2024</span>
             <span style={{
               fontSize: 9, fontWeight: 600, padding: "2px 6px", borderRadius: 10,
-              background: Number(tooltipData.reductionPct) > 0 ? "rgba(34,197,94,0.15)" : "rgba(248,113,113,0.15)",
-              color: Number(tooltipData.reductionPct) > 0 ? "#22c55e" : "#F87171",
+              background: "rgba(34,197,94,0.15)", color: "#22c55e",
             }}>−{tooltipData.reductionPct}% eCOST</span>
           </div>
 
-          {/* Rows */}
+          {/* Trade type + count */}
+          {tooltipData.tradeType && (
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 7, paddingBottom: 6, borderBottom: "1px solid #1a3044" }}>
+              <span style={{
+                display: "inline-block", padding: "2px 8px", borderRadius: 10, fontSize: 9, fontWeight: 700,
+                background: TRADE_COLORS[tooltipData.tradeType] + "22",
+                color: TRADE_COLORS[tooltipData.tradeType],
+                textTransform: "uppercase", letterSpacing: "0.06em",
+              }}>{tooltipData.tradeType}</span>
+              {tooltipData.trades !== undefined && (
+                <span style={{ fontSize: 9, color: "#4a5568" }}>{tooltipData.trades} trades executed</span>
+              )}
+            </div>
+          )}
+
+          {/* Metric rows */}
           <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-            {/* eCOST */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                 <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#F87171" }} />
@@ -457,8 +557,6 @@ function ECostChart() {
               </div>
               <span style={{ fontSize: 11, fontWeight: 700, color: "#F87171", fontFamily: "Helvetica, Arial, sans-serif" }}>${tooltipData.eCost.toFixed(2)}</span>
             </div>
-
-            {/* Market Price */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                 <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#4A90D9" }} />
@@ -466,8 +564,6 @@ function ECostChart() {
               </div>
               <span style={{ fontSize: 11, fontWeight: 700, color: "#4A90D9", fontFamily: "Helvetica, Arial, sans-serif" }}>${tooltipData.price.toFixed(2)}</span>
             </div>
-
-            {/* Gap */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                 <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#A78BFA" }} />
@@ -475,8 +571,6 @@ function ECostChart() {
               </div>
               <span style={{ fontSize: 11, fontWeight: 700, color: "#A78BFA", fontFamily: "Helvetica, Arial, sans-serif" }}>{tooltipData.gapPct}% below</span>
             </div>
-
-            {/* Qty */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                 <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
@@ -484,8 +578,6 @@ function ECostChart() {
               </div>
               <span style={{ fontSize: 11, fontWeight: 700, color: "#22c55e", fontFamily: "Helvetica, Arial, sans-serif" }}>{tooltipData.qty.toFixed(2)}×</span>
             </div>
-
-            {/* Qty gain */}
             <div style={{ marginTop: 4, paddingTop: 5, borderTop: "1px solid #1a3044", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{ fontSize: 9, color: "#4a5568" }}>Qty gain since start</span>
               <span style={{ fontSize: 10, fontWeight: 600, color: "#e2e8f0" }}>+{tooltipData.qtyGain}%</span>
@@ -496,11 +588,12 @@ function ECostChart() {
 
       {/* Summary row */}
       <div style={{ display: "flex", gap: 20, marginTop: 10, paddingTop: 10, borderTop: "1px solid #1a3044", flexWrap: "wrap" }}>
-        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Initial eCOST</div><div style={{ fontSize: 14, fontWeight: 700, color: "#F87171", fontFamily: "Helvetica, Arial, sans-serif" }}>$2.84</div></div>
-        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Current eCOST</div><div style={{ fontSize: 14, fontWeight: 700, color: "#22c55e", fontFamily: "Helvetica, Arial, sans-serif" }}>$0.76</div></div>
-        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Reduction</div><div style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", fontFamily: "Helvetica, Arial, sans-serif" }}>−73.2%</div></div>
-        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Qty Accumulated</div><div style={{ fontSize: 14, fontWeight: 700, color: "#4A90D9", fontFamily: "Helvetica, Arial, sans-serif" }}>5.01×</div></div>
-        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>vs Market Price</div><div style={{ fontSize: 14, fontWeight: 700, color: "#A78BFA", fontFamily: "Helvetica, Arial, sans-serif" }}>−82.2% below</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Initial eCOST</div><div style={{ fontSize: 13, fontWeight: 700, color: "#F87171", fontFamily: "Helvetica, Arial, sans-serif" }}>${first.eCost.toFixed(2)}</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Current eCOST</div><div style={{ fontSize: 13, fontWeight: 700, color: "#22c55e", fontFamily: "Helvetica, Arial, sans-serif" }}>${last.eCost.toFixed(2)}</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Reduction</div><div style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0", fontFamily: "Helvetica, Arial, sans-serif" }}>−{reductionPct}%</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Qty Accumulated</div><div style={{ fontSize: 13, fontWeight: 700, color: "#4A90D9", fontFamily: "Helvetica, Arial, sans-serif" }}>{last.qty.toFixed(2)}×</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>vs Market Price</div><div style={{ fontSize: 13, fontWeight: 700, color: "#A78BFA", fontFamily: "Helvetica, Arial, sans-serif" }}>−{gapBelowMarket}% below</div></div>
+        <div><div style={{ fontSize: 9, color: "#4a5568", marginBottom: 2 }}>Total Trades</div><div style={{ fontSize: 13, fontWeight: 700, color: "#F59E0B", fontFamily: "Helvetica, Arial, sans-serif" }}>{totalTrades}</div></div>
       </div>
     </div>
   );
