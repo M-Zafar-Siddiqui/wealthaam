@@ -105,7 +105,7 @@ export function HeroSection() {
               <span
                 className="inline-flex items-center gap-1.5 ml-3 align-middle"
                 style={{
-                  fontSize: "clamp(0.6rem, 1.1vw, 0.8rem)",
+                  fontSize: "clamp(0.75rem, 1.375vw, 1rem)",
                   fontWeight: 500,
                   color: "#2dd4bf",
                   borderBottom: "1.5px solid #2dd4bf",
@@ -118,7 +118,7 @@ export function HeroSection() {
                 }}
               >
                 <ShieldCheck
-                  style={{ width: "clamp(0.65rem, 1.2vw, 0.9rem)", height: "clamp(0.65rem, 1.2vw, 0.9rem)", flexShrink: 0 }}
+                  style={{ width: "clamp(0.8rem, 1.5vw, 1.1rem)", height: "clamp(0.8rem, 1.5vw, 1.1rem)", flexShrink: 0 }}
                   strokeWidth={2.2}
                 />
                 Self-Custody / Non-Custodial Framework
