@@ -1,5 +1,5 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, CheckCircle, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 
@@ -102,6 +102,27 @@ export function HeroSection() {
               <br />
               <span className="gradient-text">Wealth Management </span>
               <span className="text-white">Platform</span>
+              <span
+                className="inline-flex items-center gap-1.5 ml-3 align-middle"
+                style={{
+                  fontSize: "clamp(0.6rem, 1.1vw, 0.8rem)",
+                  fontWeight: 500,
+                  color: "#2dd4bf",
+                  borderBottom: "1.5px solid #2dd4bf",
+                  paddingBottom: "2px",
+                  letterSpacing: "0.01em",
+                  verticalAlign: "middle",
+                  lineHeight: 1,
+                  whiteSpace: "nowrap",
+                  opacity: 0.92,
+                }}
+              >
+                <ShieldCheck
+                  style={{ width: "clamp(0.65rem, 1.2vw, 0.9rem)", height: "clamp(0.65rem, 1.2vw, 0.9rem)", flexShrink: 0 }}
+                  strokeWidth={2.2}
+                />
+                Self-Custody / Non-Custodial Framework
+              </span>
             </h1>
           </AnimatedSection>
 
